@@ -1,19 +1,17 @@
-package routes
+package book
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func GetBooksRoutes(r *gin.RouterGroup, db *gorm.DB) *gin.RouterGroup {
 
+	bookAPI := Wire(db)
+
 	bookRouter := r.Group("book")
 	{
-		bookRouter.GET("/", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{"aa": "b"})
-		})
+		bookRouter.GET("/", bookAPI.GetAllBooks)
 	}
 
 	return r

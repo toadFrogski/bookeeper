@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"gg/config"
-	"gg/routes/v1"
+	config "gg/conf"
+	"gg/modules/book"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -36,12 +36,19 @@ func getDB(dbconfig *config.DatabaseConfig) *gorm.DB {
 	return db
 }
 
+func InitRoutes(r *gin.Engine, db *gorm.DB) {
+	v1 := r.Group("/v1")
+	{
+		book.GetBooksRoutes(v1, db)
+	}
+}
+
 func main() {
 	settings := getConfig()
 	r := gin.Default()
 	db := getDB(&settings.Database)
 
-	routes.GetV1Routes(r, db)
+	InitRoutes(r, db)
 
 	r.Run(settings.Server.GetListenAddr())
 }
