@@ -28,6 +28,13 @@ func (sc *ServerConfig) GetListenAddr() string {
 	return fmt.Sprintf("%s:%d", sc.Host, sc.Port)
 }
 
+func (dc *DatabaseConfig) GetDSN() string {
+	return fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%d",
+		dc.Host, dc.Username, dc.Password, dc.Database, dc.Port,
+	)
+}
+
 func LoadConfig(path string) (*ApplicationConfig, error) {
 	var applicationConfig ApplicationConfig
 	if err := configor.Load(&applicationConfig, path); err != nil {

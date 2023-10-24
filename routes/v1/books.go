@@ -4,11 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func GetBooksRoutes(r *gin.RouterGroup) *gin.RouterGroup {
-
-	// bookController := NewBookController()
+func GetBooksRoutes(r *gin.RouterGroup, db *gorm.DB) *gin.RouterGroup {
 
 	bookRouter := r.Group("book")
 	{
