@@ -30,8 +30,8 @@ func (sc *ServerConfig) GetListenAddr() string {
 
 func (dc *DatabaseConfig) GetDSN() string {
 	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dc.Username, dc.Password, dc.Host, dc.Port, dc.Database,
+		"host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
+		dc.Host, dc.Username, dc.Password, dc.Database, dc.Port,
 	)
 }
 
