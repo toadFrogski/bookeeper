@@ -31,6 +31,7 @@ func getDB(dbconfig *config.DatabaseConfig) *gorm.DB {
 	db, err := config.ConnectToDB(dbconfig)
 	if err != nil {
 		fmt.Printf("Error connect to DB: %+v\n", err)
+		panic(err)
 	}
 
 	return db

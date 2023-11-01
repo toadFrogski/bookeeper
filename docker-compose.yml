@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      - MYSQL_PASSWORD=ggPwd!
+      - MYSQL_USER=gg
+      - MYSQL_DATABASE=gg
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./docker/db:/var/lib/mysql
+    ports:
+      - "1466:3306"
+
