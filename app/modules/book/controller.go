@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type BookControllerAPI struct {
+type BookControllerImpl struct {
 	svc domain.BookService
 }
 
-func (b BookControllerAPI) GetAllBooks(c *gin.Context) {
-	b.svc.GetAllBooks(c)
+func (bc BookControllerImpl) GetAllBooks(c *gin.Context) {
+	bc.svc.GetAllBooks(c)
 }

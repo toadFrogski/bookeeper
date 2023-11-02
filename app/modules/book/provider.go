@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ctl     *BookControllerAPI
+	ctl     *BookControllerImpl
 	ctlOnce sync.Once
 
 	svc     *BookServiceImpl
@@ -23,22 +23,22 @@ var (
 		ProvideBookRepository,
 		ProvideBookService,
 
-		wire.Bind(new(domain.BookController), new(*BookControllerAPI)),
+		wire.Bind(new(domain.BookController), new(*BookControllerImpl)),
 		wire.Bind(new(domain.BookService), new(*BookServiceImpl)),
 		wire.Bind(new(domain.BookRepository), new(*BookRepositoryImpl)),
 	)
 )
 
-func ProvideBookController(svc domain.BookService) *BookControllerAPI {
+func ProvideBookController(svc domain.BookService) *BookControllerImpl {
 	ctlOnce.Do(func() {
-		ctl = &BookControllerAPI{svc: svc}
+		ctl = &BookControllerImpl{svc: svc}
 	})
 	return ctl
 }
 
-func ProvideBookService(bookRepository domain.BookRepository) *BookServiceImpl {
+func ProvideBookService(repo domain.BookRepository) *BookServiceImpl {
 	svcOnce.Do(func() {
-		svc = &BookServiceImpl{bookRepository: bookRepository}
+		svc = &BookServiceImpl{repo: repo}
 	})
 	return svc
 }

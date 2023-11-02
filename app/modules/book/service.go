@@ -9,12 +9,12 @@ import (
 )
 
 type BookServiceImpl struct {
-	bookRepository domain.BookRepository
+	repo domain.BookRepository
 }
 
-func (b BookServiceImpl) GetAllBooks(c *gin.Context) {
+func (bs BookServiceImpl) GetAllBooks(c *gin.Context) {
 	defer utils.PanicHandler(c)
-	data, err := b.bookRepository.GetAllBooks()
+	data, err := bs.repo.GetAllBooks()
 	if err != nil {
 		utils.PanicException(utils.DataNotFound)
 	}

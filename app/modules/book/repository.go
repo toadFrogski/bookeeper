@@ -10,9 +10,9 @@ type BookRepositoryImpl struct {
 	db *gorm.DB
 }
 
-func (b BookRepositoryImpl) GetAllBooks() ([]domain.Book, error) {
+func (br BookRepositoryImpl) GetAllBooks() ([]domain.Book, error) {
 	var books []domain.Book
-	if err := b.db.Find(&books).Error; err != nil {
+	if err := br.db.Find(&books).Error; err != nil {
 		return nil, err
 	}
 

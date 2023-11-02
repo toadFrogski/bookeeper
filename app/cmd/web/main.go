@@ -5,6 +5,7 @@ import (
 	"fmt"
 	config "gg/conf"
 	"gg/modules/book"
+	"gg/modules/user"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -41,6 +42,7 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 	v1 := r.Group("/v1")
 	{
 		book.GetBooksRoutes(v1, db)
+		user.GetUserRoutes(v1, db)
 	}
 }
 

@@ -1,13 +1,13 @@
 //go:build wireinject
 // +build wireinject
 
-package book
+package user
 
 import (
 	"github.com/google/wire"
 	"gorm.io/gorm"
 )
 
-func Wire(db *gorm.DB) *BookControllerImpl {
-	panic(wire.Build(BookProviderSet))
+func Wire(db *gorm.DB) *UserControllerImpl {
+	panic(wire.Build(UserProviderSet))
 }
