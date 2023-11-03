@@ -1,2 +1,3 @@
 .vscode
 docker/db
+wire_gen.go

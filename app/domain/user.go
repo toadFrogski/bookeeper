@@ -21,11 +21,13 @@ type (
 	}
 
 	UserService interface {
-		CreateUser(c *gin.Context)
+		Register(c *gin.Context)
+		Login(c *gin.Context)
 	}
 
 	UserController interface {
-		CreateUser(c *gin.Context)
+		Register(c *gin.Context)
+		Login(c *gin.Context)
 	}
 )
 

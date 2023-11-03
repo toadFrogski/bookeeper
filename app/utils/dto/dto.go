@@ -1,4 +1,8 @@
-package utils
+package dto
+
+import (
+	"gg/utils/constants"
+)
 
 type Response[T any] struct {
 	ResponseCode    int    `json:"response_code"`
@@ -6,7 +10,7 @@ type Response[T any] struct {
 	Data            T      `json:"data"`
 }
 
-func BuildResponse[T any](status ResponseStatus, data T) Response[T] {
+func BuildResponse[T any](status constants.ResponseStatus, data T) Response[T] {
 	return _BuildResponse[T](status.GetResponseStatus(), status.GetResponseMessage(), data)
 }
 

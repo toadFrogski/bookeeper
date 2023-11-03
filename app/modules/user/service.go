@@ -2,7 +2,10 @@ package user
 
 import (
 	"gg/domain"
-	"gg/utils"
+	"gg/utils/constants"
+	"gg/utils/dto"
+	"gg/utils/panic"
+	"gg/utils/token"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,19 +16,19 @@ type UserServiceImpl struct {
 }
 
 type CreateUserForm struct {
-	Email    string `form:"email" binding:"required"`
-	Username string `form:"username" binding:"required"`
-	Password string `form:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
-func (us UserServiceImpl) CreateUser(c *gin.Context) {
-	defer utils.PanicHandler(c)
+func (us UserServiceImpl) Register(c *gin.Context) {
+	defer panic.PanicHandler(c)
 
 	var user domain.User
 	var createUserForm CreateUserForm
 
 	if err := c.ShouldBind(&createUserForm); err != nil {
-		utils.PanicException(utils.InvalidRequest)
+		panic.PanicException(constants.InvalidRequest)
 	}
 
 	user.Email = createUserForm.Email
@@ -33,8 +36,20 @@ func (us UserServiceImpl) CreateUser(c *gin.Context) {
 	user.Password = createUserForm.Password
 
 	if err := us.repo.CreateUser(&user); err != nil {
-		utils.PanicException(utils.InternalError)
+		panic.PanicException(constants.InternalError)
 	}
 
-	c.JSON(http.StatusCreated, utils.BuildResponse[any](utils.Success, nil))
+	accessToken, err := token.GenerateToken(uint(user.ID))
+	if err != nil {
+		panic.PanicException(constants.InternalError)
+	}
+
+	c.JSON(
+		http.StatusCreated,
+		dto.BuildResponse[map[string]string](constants.Success, map[string]string{"token": accessToken}),
+	)
+}
+
+func (us UserServiceImpl) Login(c *gin.Context) {
+
 }

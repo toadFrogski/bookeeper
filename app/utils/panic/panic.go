@@ -1,8 +1,10 @@
-package utils
+package panic
 
 import (
 	"errors"
 	"fmt"
+	"gg/utils/constants"
+	"gg/utils/dto"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +20,7 @@ func _PanicException(code int, message string) {
 	}
 }
 
-func PanicException(response ResponseStatus) {
+func PanicException(response constants.ResponseStatus) {
 	_PanicException(response.GetResponseStatus(), response.GetResponseMessage())
 }
 
@@ -28,17 +30,15 @@ func PanicHandler(c *gin.Context) {
 		strArr := strings.Split(str, ":")
 
 		code, _ := strconv.Atoi(strArr[0])
-		msg := strings.Trim(strArr[1], " ")
-
 		switch code {
-		case DataNotFound.GetResponseStatus():
-			c.JSON(http.StatusBadRequest, _BuildResponse[any](code, msg, nil))
+		case constants.DataNotFound.GetResponseStatus():
+			c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.DataNotFound, nil))
 			c.Abort()
-		case Unauthorized.GetResponseStatus():
-			c.JSON(http.StatusUnauthorized, _BuildResponse[any](code, msg, nil))
+		case constants.Unauthorized.GetResponseStatus():
+			c.JSON(http.StatusUnauthorized, dto.BuildResponse[any](constants.Unauthorized, nil))
 			c.Abort()
 		default:
-			c.JSON(http.StatusInternalServerError, _BuildResponse[any](code, msg, nil))
+			c.JSON(http.StatusInternalServerError, dto.BuildResponse[error](constants.UnknownError, fmt.Errorf("%v", err)))
 			c.Abort()
 		}
 	}

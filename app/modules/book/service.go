@@ -2,7 +2,9 @@ package book
 
 import (
 	"gg/domain"
-	"gg/utils"
+	"gg/utils/constants"
+	"gg/utils/dto"
+	"gg/utils/panic"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,11 +15,11 @@ type BookServiceImpl struct {
 }
 
 func (bs BookServiceImpl) GetAllBooks(c *gin.Context) {
-	defer utils.PanicHandler(c)
+	defer panic.PanicHandler(c)
 	data, err := bs.repo.GetAllBooks()
 	if err != nil {
-		utils.PanicException(utils.DataNotFound)
+		panic.PanicException(constants.DataNotFound)
 	}
 
-	c.JSON(http.StatusOK, utils.BuildResponse[[]domain.Book](utils.Success, data))
+	c.JSON(http.StatusOK, dto.BuildResponse[[]domain.Book](constants.Success, data))
 }
