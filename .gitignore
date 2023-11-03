@@ -1,3 +1,9 @@
+# Editor
 .vscode
+
+#Docker
 docker/db
+
+# Golang tools
 wire_gen.go
+docs

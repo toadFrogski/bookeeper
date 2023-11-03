@@ -15,6 +15,22 @@ const (
 	defaultConfigPath = "config.yml"
 )
 
+// @title GG backend API
+// @version 1.0
+//
+// @BasePath /v1
+
+func main() {
+	settings := getConfig()
+	r := gin.Default()
+	db := getDB(&settings.Database)
+
+	SetupMiddlewares(r)
+	InitRoutes(r, db)
+
+	r.Run(settings.Server.GetListenAddr())
+}
+
 func getConfig() *config.ApplicationConfig {
 	configPath := flag.String("config", defaultConfigPath, "config file")
 	flag.Parse()
@@ -48,15 +64,4 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 
 func SetupMiddlewares(r *gin.Engine) {
 	r.Use(gin.Recovery())
-}
-
-func main() {
-	settings := getConfig()
-	r := gin.Default()
-	db := getDB(&settings.Database)
-
-	SetupMiddlewares(r)
-	InitRoutes(r, db)
-
-	r.Run(settings.Server.GetListenAddr())
 }
