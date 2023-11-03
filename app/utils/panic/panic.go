@@ -29,8 +29,9 @@ func PanicHandler(c *gin.Context) {
 		str := fmt.Sprint(err)
 		strArr := strings.Split(str, ":")
 
-		code, _ := strconv.Atoi(strArr[0])
-		switch code {
+		status, _ := strconv.Atoi(strArr[0])
+
+		switch status {
 		case constants.DataNotFound.GetResponseStatus():
 			c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.DataNotFound, nil))
 			c.Abort()
@@ -38,7 +39,7 @@ func PanicHandler(c *gin.Context) {
 			c.JSON(http.StatusUnauthorized, dto.BuildResponse[any](constants.Unauthorized, nil))
 			c.Abort()
 		default:
-			c.JSON(http.StatusInternalServerError, dto.BuildResponse[error](constants.UnknownError, fmt.Errorf("%v", err)))
+			c.JSON(http.StatusInternalServerError, dto.BuildResponse[any](constants.UnknownError, nil))
 			c.Abort()
 		}
 	}

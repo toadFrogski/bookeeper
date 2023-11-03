@@ -18,6 +18,7 @@ type (
 
 	UserRepository interface {
 		CreateUser(u *User) error
+		GetUserByEmail(email string) (User, error)
 	}
 
 	UserService interface {

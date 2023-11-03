@@ -13,6 +13,7 @@ func GetUserRoutes(r *gin.RouterGroup, db *gorm.DB) {
 	r.POST("register", userAPI.Register)
 	r.POST("login", userAPI.Login)
 
+	// @TODO: Write user profile
 	// userRouter := r.Group("user")
 	// userRouter.Use(middlewares.JwtAuthMiddleware())
 	// {

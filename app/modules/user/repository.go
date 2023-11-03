@@ -17,3 +17,12 @@ func (ur *UserRepositoryImpl) CreateUser(u *domain.User) error {
 
 	return nil
 }
+
+func (ur *UserRepositoryImpl) GetUserByEmail(email string) (domain.User, error) {
+	user := domain.User{Email: email}
+	if err := ur.db.First(&user).Error; err != nil {
+		return domain.User{}, err
+	}
+
+	return user, nil
+}
