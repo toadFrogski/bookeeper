@@ -7,13 +7,13 @@ import (
 )
 
 type UserControllerImpl struct {
-	svc domain.UserService
+	userSvc domain.UserService
 }
 
 func (uc UserControllerImpl) Register(c *gin.Context) {
-	uc.svc.Register(c)
+	uc.userSvc.Register(c)
 }
 
 func (uc UserControllerImpl) Login(c *gin.Context) {
-	uc.svc.Login(c)
+	uc.userSvc.Login(c)
 }

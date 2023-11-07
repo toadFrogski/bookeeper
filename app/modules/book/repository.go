@@ -18,3 +18,7 @@ func (br BookRepositoryImpl) GetAllBooks() ([]domain.Book, error) {
 
 	return books, nil
 }
+
+func (br BookRepositoryImpl) SaveBook(book *domain.Book) error {
+	return nil
+}

@@ -14,7 +14,7 @@ import (
 )
 
 type UserServiceImpl struct {
-	repo domain.UserRepository
+	userRepo domain.UserRepository
 }
 
 type RegisterUserForm struct {
@@ -42,7 +42,7 @@ func (us UserServiceImpl) Register(c *gin.Context) {
 	user.Username = RegisterUserForm.Username
 	user.Password = RegisterUserForm.Password
 
-	if err := us.repo.CreateUser(&user); err != nil {
+	if err := us.userRepo.CreateUser(&user); err != nil {
 		panic.PanicException(constants.InternalError)
 	}
 
@@ -67,7 +67,7 @@ func (us UserServiceImpl) Login(c *gin.Context) {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	user, err := us.repo.GetUserByEmail(loginUserForm.Email)
+	user, err := us.userRepo.GetUserByEmail(loginUserForm.Email)
 	if err != nil {
 		panic.PanicException(constants.DataNotFound)
 	}

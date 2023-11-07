@@ -12,8 +12,8 @@ import (
 
 // Define the models to generate migrations for.
 var models = []any{
-	&domain.Book{},
 	&domain.User{},
+	&domain.Book{},
 }
 
 func main() {

@@ -8,7 +8,7 @@ import (
 )
 
 type BookControllerImpl struct {
-	svc domain.BookService
+	bookSvc domain.BookService
 }
 
 // GetAllBooks godoc
@@ -20,5 +20,9 @@ type BookControllerImpl struct {
 // @Failure 400 {object} dto.Response[any]
 // @Router /book/ [get]
 func (bc BookControllerImpl) GetAllBooks(c *gin.Context) {
-	bc.svc.GetAllBooks(c)
+	bc.bookSvc.GetAllBooks(c)
+}
+
+func (bc BookControllerImpl) SaveBook(c *gin.Context) {
+	bc.bookSvc.SaveBook(c)
 }

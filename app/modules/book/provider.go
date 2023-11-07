@@ -9,14 +9,14 @@ import (
 )
 
 var (
-	ctl     *BookControllerImpl
-	ctlOnce sync.Once
+	bookCtl     *BookControllerImpl
+	bookCtlOnce sync.Once
 
-	svc     *BookServiceImpl
-	svcOnce sync.Once
+	bookSvc     *BookServiceImpl
+	bookSvcOnce sync.Once
 
-	repo     *BookRepositoryImpl
-	repoOnce sync.Once
+	bookRepo     *BookRepositoryImpl
+	bookRepoOnce sync.Once
 
 	BookProviderSet wire.ProviderSet = wire.NewSet(
 		ProvideBookController,
@@ -29,23 +29,23 @@ var (
 	)
 )
 
-func ProvideBookController(svc domain.BookService) *BookControllerImpl {
-	ctlOnce.Do(func() {
-		ctl = &BookControllerImpl{svc: svc}
+func ProvideBookController(bookSvc domain.BookService) *BookControllerImpl {
+	bookCtlOnce.Do(func() {
+		bookCtl = &BookControllerImpl{bookSvc: bookSvc}
 	})
-	return ctl
+	return bookCtl
 }
 
-func ProvideBookService(repo domain.BookRepository) *BookServiceImpl {
-	svcOnce.Do(func() {
-		svc = &BookServiceImpl{repo: repo}
+func ProvideBookService(bookRepo domain.BookRepository) *BookServiceImpl {
+	bookSvcOnce.Do(func() {
+		bookSvc = &BookServiceImpl{bookRepo: bookRepo}
 	})
-	return svc
+	return bookSvc
 }
 
 func ProvideBookRepository(db *gorm.DB) *BookRepositoryImpl {
-	repoOnce.Do(func() {
-		repo = &BookRepositoryImpl{db: db}
+	bookRepoOnce.Do(func() {
+		bookRepo = &BookRepositoryImpl{db: db}
 	})
-	return repo
+	return bookRepo
 }

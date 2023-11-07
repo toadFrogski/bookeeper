@@ -11,10 +11,11 @@ import (
 
 type (
 	User struct {
+		gorm.Model
 		Username string `gorm:"column:username" json:"username"`
 		Password string `gorm:"password" json:"-"`
 		Email    string `gorm:"column:email" json:"email"`
-		BaseModel
+		Books    []Book `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"books"`
 	}
 
 	UserRepository interface {
