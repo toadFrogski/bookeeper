@@ -3,7 +3,6 @@ package domain
 import (
 	"crypto/sha256"
 	"fmt"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -11,24 +10,24 @@ import (
 
 type (
 	User struct {
-		gorm.Model
+		ID       uint   `gorm:"primarykey"`
 		Username string `gorm:"column:username" json:"username"`
 		Password string `gorm:"password" json:"-"`
 		Email    string `gorm:"column:email" json:"email"`
 		Books    []Book `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"books"`
 	}
 
-	UserRepository interface {
+	IUserRepository interface {
 		CreateUser(u *User) error
 		GetUserByEmail(email string) (User, error)
 	}
 
-	UserService interface {
+	IUserService interface {
 		Register(c *gin.Context)
 		Login(c *gin.Context)
 	}
 
-	UserController interface {
+	IUserController interface {
 		Register(c *gin.Context)
 		Login(c *gin.Context)
 	}
@@ -36,13 +35,6 @@ type (
 
 func (u *User) BeforeCreate(tx *gorm.DB) error {
 	u.Password = fmt.Sprintf("%x", sha256.Sum256([]byte(u.Password)))
-	u.CreatedAt = time.Now()
-
-	return nil
-}
-
-func (u *User) BeforeUpdate(tx *gorm.DB) error {
-	u.UpdatedAt = time.Now()
 
 	return nil
 }

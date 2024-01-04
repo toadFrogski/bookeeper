@@ -32,6 +32,9 @@ func TokenValid(c *gin.Context) error {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
+		if err := token.Claims.Valid(); err != nil {
+			return nil, err
+		}
 		return []byte(os.Getenv("API_SECRET")), nil
 	})
 	if err != nil {

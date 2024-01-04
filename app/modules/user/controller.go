@@ -6,14 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserControllerImpl struct {
-	userSvc domain.UserService
+type UserController struct {
+	userSvc domain.IUserService
 }
 
-func (uc UserControllerImpl) Register(c *gin.Context) {
+func (uc UserController) Register(c *gin.Context) {
 	uc.userSvc.Register(c)
 }
 
-func (uc UserControllerImpl) Login(c *gin.Context) {
+func (uc UserController) Login(c *gin.Context) {
 	uc.userSvc.Login(c)
 }

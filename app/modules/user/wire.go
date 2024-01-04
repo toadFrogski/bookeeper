@@ -8,6 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func Wire(db *gorm.DB) *UserControllerImpl {
+func Wire(db *gorm.DB) *UserController {
 	panic(wire.Build(UserProviderSet))
 }

@@ -6,11 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRepositoryImpl struct {
+type UserRepository struct {
 	db *gorm.DB
 }
 
-func (ur *UserRepositoryImpl) CreateUser(u *domain.User) error {
+func (ur *UserRepository) CreateUser(u *domain.User) error {
 	if err := ur.db.Create(u).Error; err != nil {
 		return err
 	}
@@ -18,7 +18,7 @@ func (ur *UserRepositoryImpl) CreateUser(u *domain.User) error {
 	return nil
 }
 
-func (ur *UserRepositoryImpl) GetUserByEmail(email string) (domain.User, error) {
+func (ur *UserRepository) GetUserByEmail(email string) (domain.User, error) {
 	user := domain.User{Email: email}
 	if err := ur.db.First(&user).Error; err != nil {
 		return domain.User{}, err

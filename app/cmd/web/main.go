@@ -19,15 +19,13 @@ const (
 // @version 1.0
 //
 // @BasePath /v1
-
 func main() {
 	settings := getConfig()
 	r := gin.Default()
-	db := getDB(&settings.Database)
+	db := initDB(&settings.Database)
 
-	SetupMiddlewares(r)
-	InitRoutes(r, db)
-
+	initMiddlewares(r)
+	initRoutes(r, db)
 	r.Run(settings.Server.GetListenAddr())
 }
 
@@ -44,7 +42,7 @@ func getConfig() *config.ApplicationConfig {
 	return config
 }
 
-func getDB(dbconfig *config.DatabaseConfig) *gorm.DB {
+func initDB(dbconfig *config.DatabaseConfig) *gorm.DB {
 	db, err := config.ConnectToDB(dbconfig)
 	if err != nil {
 		fmt.Printf("Error connect to DB: %+v\n", err)
@@ -54,7 +52,8 @@ func getDB(dbconfig *config.DatabaseConfig) *gorm.DB {
 	return db
 }
 
-func InitRoutes(r *gin.Engine, db *gorm.DB) {
+func initRoutes(r *gin.Engine, db *gorm.DB) {
+	user.GetAuthRoutes(r, db)
 	v1 := r.Group("/v1")
 	{
 		book.GetBooksRoutes(v1, db)
@@ -62,6 +61,6 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 	}
 }
 
-func SetupMiddlewares(r *gin.Engine) {
+func initMiddlewares(r *gin.Engine) {
 	r.Use(gin.Recovery())
 }

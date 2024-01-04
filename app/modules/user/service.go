@@ -13,22 +13,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserServiceImpl struct {
-	userRepo domain.UserRepository
+type UserService struct {
+	userRepo domain.IUserRepository
 }
 
-type RegisterUserForm struct {
-	Email    string `json:"email" binding:"required"`
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
-type LoginUserForm struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
-func (us UserServiceImpl) Register(c *gin.Context) {
+func (us UserService) Register(c *gin.Context) {
 	defer panic.PanicHandler(c)
 
 	var user domain.User
@@ -47,6 +36,7 @@ func (us UserServiceImpl) Register(c *gin.Context) {
 	}
 
 	accessToken, err := token.GenerateToken(uint(user.ID))
+
 	if err != nil {
 		panic.PanicException(constants.InternalError)
 	}
@@ -57,7 +47,7 @@ func (us UserServiceImpl) Register(c *gin.Context) {
 	)
 }
 
-func (us UserServiceImpl) Login(c *gin.Context) {
+func (us UserService) Login(c *gin.Context) {
 	defer panic.PanicHandler(c)
 
 	var user domain.User

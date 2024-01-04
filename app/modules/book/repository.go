@@ -6,11 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type BookRepositoryImpl struct {
+type BookRepository struct {
 	db *gorm.DB
 }
 
-func (br BookRepositoryImpl) GetAllBooks() ([]domain.Book, error) {
+func (br BookRepository) GetAllBooks() ([]domain.Book, error) {
 	var books []domain.Book
 	if err := br.db.Find(&books).Error; err != nil {
 		return nil, err
@@ -19,6 +19,6 @@ func (br BookRepositoryImpl) GetAllBooks() ([]domain.Book, error) {
 	return books, nil
 }
 
-func (br BookRepositoryImpl) SaveBook(book *domain.Book) error {
+func (br BookRepository) SaveBook(book *domain.Book) error {
 	return nil
 }

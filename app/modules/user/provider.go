@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	userCtl     *UserControllerImpl
+	userCtl     *UserController
 	userCtlOnce sync.Once
 
-	userSvc     *UserServiceImpl
+	userSvc     *UserService
 	userSvcOnce sync.Once
 
-	userRepo     *UserRepositoryImpl
+	userRepo     *UserRepository
 	userRepoOnce sync.Once
 
 	UserProviderSet wire.ProviderSet = wire.NewSet(
@@ -23,29 +23,29 @@ var (
 		ProvideUserRepository,
 		ProvideUserService,
 
-		wire.Bind(new(domain.UserController), new(*UserControllerImpl)),
-		wire.Bind(new(domain.UserService), new(*UserServiceImpl)),
-		wire.Bind(new(domain.UserRepository), new(*UserRepositoryImpl)),
+		wire.Bind(new(domain.IUserController), new(*UserController)),
+		wire.Bind(new(domain.IUserService), new(*UserService)),
+		wire.Bind(new(domain.IUserRepository), new(*UserRepository)),
 	)
 )
 
-func ProvideUserController(userSvc domain.UserService) *UserControllerImpl {
+func ProvideUserController(userSvc domain.IUserService) *UserController {
 	userCtlOnce.Do(func() {
-		userCtl = &UserControllerImpl{userSvc: userSvc}
+		userCtl = &UserController{userSvc: userSvc}
 	})
 	return userCtl
 }
 
-func ProvideUserService(userRepo domain.UserRepository) *UserServiceImpl {
+func ProvideUserService(userRepo domain.IUserRepository) *UserService {
 	userSvcOnce.Do(func() {
-		userSvc = &UserServiceImpl{userRepo: userRepo}
+		userSvc = &UserService{userRepo: userRepo}
 	})
 	return userSvc
 }
 
-func ProvideUserRepository(db *gorm.DB) *UserRepositoryImpl {
+func ProvideUserRepository(db *gorm.DB) *UserRepository {
 	userRepoOnce.Do(func() {
-		userRepo = &UserRepositoryImpl{db: db}
+		userRepo = &UserRepository{db: db}
 	})
 	return userRepo
 }

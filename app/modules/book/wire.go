@@ -8,6 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func Wire(db *gorm.DB) *BookControllerImpl {
+func Wire(db *gorm.DB) *BookController {
 	panic(wire.Build(BookProviderSet))
 }

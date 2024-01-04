@@ -2,12 +2,11 @@ package domain
 
 import (
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type (
 	Book struct {
-		gorm.Model
+		ID          uint   `gorm:"primarykey"`
 		Name        string `gorm:"column:name" json:"name"`
 		Author      string `gorm:"column:author" json:"author"`
 		Description string `gorm:"colunm:description; text" json:"description"`
@@ -15,17 +14,17 @@ type (
 		UserID      uint
 	}
 
-	BookController interface {
+	IBookController interface {
 		GetAllBooks(c *gin.Context)
 		SaveBook(c *gin.Context)
 	}
 
-	BookService interface {
+	IBookService interface {
 		GetAllBooks(c *gin.Context)
 		SaveBook(c *gin.Context)
 	}
 
-	BookRepository interface {
+	IBookRepository interface {
 		GetAllBooks() ([]Book, error)
 		SaveBook(book *Book) error
 	}

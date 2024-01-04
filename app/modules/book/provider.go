@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	bookCtl     *BookControllerImpl
+	bookCtl     *BookController
 	bookCtlOnce sync.Once
 
-	bookSvc     *BookServiceImpl
+	bookSvc     *BookService
 	bookSvcOnce sync.Once
 
-	bookRepo     *BookRepositoryImpl
+	bookRepo     *BookRepository
 	bookRepoOnce sync.Once
 
 	BookProviderSet wire.ProviderSet = wire.NewSet(
@@ -23,29 +23,29 @@ var (
 		ProvideBookRepository,
 		ProvideBookService,
 
-		wire.Bind(new(domain.BookController), new(*BookControllerImpl)),
-		wire.Bind(new(domain.BookService), new(*BookServiceImpl)),
-		wire.Bind(new(domain.BookRepository), new(*BookRepositoryImpl)),
+		wire.Bind(new(domain.IBookController), new(*BookController)),
+		wire.Bind(new(domain.IBookService), new(*BookService)),
+		wire.Bind(new(domain.IBookRepository), new(*BookRepository)),
 	)
 )
 
-func ProvideBookController(bookSvc domain.BookService) *BookControllerImpl {
+func ProvideBookController(bookSvc domain.IBookService) *BookController {
 	bookCtlOnce.Do(func() {
-		bookCtl = &BookControllerImpl{bookSvc: bookSvc}
+		bookCtl = &BookController{bookSvc: bookSvc}
 	})
 	return bookCtl
 }
 
-func ProvideBookService(bookRepo domain.BookRepository) *BookServiceImpl {
+func ProvideBookService(bookRepo domain.IBookRepository) *BookService {
 	bookSvcOnce.Do(func() {
-		bookSvc = &BookServiceImpl{bookRepo: bookRepo}
+		bookSvc = &BookService{bookRepo: bookRepo}
 	})
 	return bookSvc
 }
 
-func ProvideBookRepository(db *gorm.DB) *BookRepositoryImpl {
+func ProvideBookRepository(db *gorm.DB) *BookRepository {
 	bookRepoOnce.Do(func() {
-		bookRepo = &BookRepositoryImpl{db: db}
+		bookRepo = &BookRepository{db: db}
 	})
 	return bookRepo
 }

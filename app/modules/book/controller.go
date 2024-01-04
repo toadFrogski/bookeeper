@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type BookControllerImpl struct {
-	bookSvc domain.BookService
+type BookController struct {
+	bookSvc domain.IBookService
 }
 
 // GetAllBooks godoc
@@ -19,10 +19,20 @@ type BookControllerImpl struct {
 // @Success 200 {object} dto.Response[domain.Book]
 // @Failure 400 {object} dto.Response[any]
 // @Router /book/ [get]
-func (bc BookControllerImpl) GetAllBooks(c *gin.Context) {
+func (bc BookController) GetAllBooks(c *gin.Context) {
 	bc.bookSvc.GetAllBooks(c)
 }
 
-func (bc BookControllerImpl) SaveBook(c *gin.Context) {
+// SaveBook godoc
+//
+// @Summary Save book
+// @Accept mpfd
+// @Produce json
+// @Param image formData file true "Image to be uploaded"
+// @Param name formData string true "Name of book"
+// @Success 200 {object} dto.Response[any]
+// @Failude 400 {object} dto.Response[any]
+// @Router /book/save [post]
+func (bc BookController) SaveBook(c *gin.Context) {
 	bc.bookSvc.SaveBook(c)
 }
