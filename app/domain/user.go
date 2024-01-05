@@ -8,13 +8,21 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	ADMIN UserRole = "admin"
+	USER  UserRole = "user"
+)
+
 type (
+	UserRole string
+
 	User struct {
-		ID       uint   `gorm:"primarykey"`
-		Username string `gorm:"column:username" json:"username"`
-		Password string `gorm:"password;->:false" json:"-"`
-		Email    string `gorm:"column:email" json:"email"`
-		Books    []Book `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"books"`
+		ID       uint     `gorm:"primarykey"`
+		Username string   `gorm:"column:username" json:"username"`
+		Password string   `gorm:"password" json:"-"`
+		Email    string   `gorm:"column:email" json:"email"`
+		Role     UserRole `gorm:"column:role" json:"-"`
+		Books    []Book   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"books"`
 	}
 
 	IUserRepository interface {

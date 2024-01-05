@@ -16,6 +16,7 @@ func GetBooksRoutes(r gin.IRouter, db *gorm.DB) gin.IRouter {
 		bookRouter.GET("/", bookAPI.GetAllBooks)
 		bookRouter.GET(":bookID", bookAPI.GetBook)
 		bookRouter.POST("save", middlewares.JwtAuthMiddleware(), bookAPI.SaveBook)
+		bookRouter.DELETE(":bookID", bookAPI.DeleteBookByID)
 	}
 
 	return r
