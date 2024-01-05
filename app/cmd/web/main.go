@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	config "gg/conf"
+	"gg/middlewares"
 	"gg/modules/book"
 	"gg/modules/user"
 
@@ -63,4 +64,6 @@ func initRoutes(r *gin.Engine, db *gorm.DB) {
 
 func initMiddlewares(r *gin.Engine) {
 	r.Use(gin.Recovery())
+	r.Use(middlewares.CORSMiddleware())
+	r.Use(middlewares.PanicHandleMiddleware())
 }

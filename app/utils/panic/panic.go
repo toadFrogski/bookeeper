@@ -24,6 +24,10 @@ func PanicException(response constants.ResponseStatus) {
 	_PanicException(response.GetResponseStatus(), response.GetResponseMessage())
 }
 
+func PanicWithMessage(status constants.ResponseStatus, message string) {
+	_PanicException(status.GetResponseStatus(), message)
+}
+
 func PanicHandler(c *gin.Context) {
 	if err := recover(); err != nil {
 		str := fmt.Sprint(err)
@@ -37,6 +41,9 @@ func PanicHandler(c *gin.Context) {
 			c.Abort()
 		case constants.Unauthorized.GetResponseStatus():
 			c.JSON(http.StatusUnauthorized, dto.BuildResponse[any](constants.Unauthorized, nil))
+			c.Abort()
+		case constants.InvalidRequest.GetResponseStatus():
+			c.JSON(http.StatusBadRequest, dto.BuildResponse[string](constants.InvalidRequest, strArr[1]))
 			c.Abort()
 		default:
 			c.JSON(http.StatusInternalServerError, dto.BuildResponse[any](constants.UnknownError, nil))

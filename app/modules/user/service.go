@@ -18,8 +18,6 @@ type UserService struct {
 }
 
 func (us UserService) Register(c *gin.Context) {
-	defer panic.PanicHandler(c)
-
 	var user domain.User
 	var RegisterUserForm RegisterUserForm
 
@@ -48,8 +46,6 @@ func (us UserService) Register(c *gin.Context) {
 }
 
 func (us UserService) Login(c *gin.Context) {
-	defer panic.PanicHandler(c)
-
 	var user domain.User
 	var loginUserForm LoginUserForm
 

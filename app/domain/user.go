@@ -12,7 +12,7 @@ type (
 	User struct {
 		ID       uint   `gorm:"primarykey"`
 		Username string `gorm:"column:username" json:"username"`
-		Password string `gorm:"password" json:"-"`
+		Password string `gorm:"password;->:false" json:"-"`
 		Email    string `gorm:"column:email" json:"email"`
 		Books    []Book `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"books"`
 	}

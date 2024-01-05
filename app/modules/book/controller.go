@@ -36,3 +36,11 @@ func (bc BookController) GetAllBooks(c *gin.Context) {
 func (bc BookController) SaveBook(c *gin.Context) {
 	bc.bookSvc.SaveBook(c)
 }
+
+func (bc BookController) GetBook(c *gin.Context) {
+	bc.bookSvc.GetBook(c)
+}
+
+func (bc BookController) DeleteBookByID(c *gin.Context) {
+	bc.bookSvc.DeleteBookByID(c)
+}
