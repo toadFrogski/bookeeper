@@ -49,7 +49,7 @@ func (bs BookService) SaveBook(c *gin.Context) {
 		Name:        saveBookForm.Name,
 		Author:      saveBookForm.Author,
 		Description: saveBookForm.Description,
-		UserID:      saveBookForm.UserID,
+		UserID:      c.Keys["user_id"].(uint),
 		Photo:       fpath,
 	}
 

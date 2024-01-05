@@ -1,5 +1,10 @@
 package book
 
+// DELETE THIS
+// Reason: Separation routes and modules
+// Need to incapsulate module behaviour
+// "Chain of responsability"
+
 import (
 	"gg/middlewares"
 
