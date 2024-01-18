@@ -56,6 +56,5 @@ func (bc BookController) GetBook(c *gin.Context) {
 // @Failure 400 {object} dto.Response[any]
 // @Router /book/{book_id} [delete]
 func (bc BookController) DeleteBookByID(c *gin.Context) {
-	userID := c.Keys["user_id"]
 	bc.bookSvc.DeleteBookByID(c)
 }

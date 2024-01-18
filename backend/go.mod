@@ -8,13 +8,11 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/wire v0.5.0
-	github.com/jinzhu/configor v1.2.1
 	gorm.io/driver/postgres v1.5.3
 	gorm.io/gorm v1.25.5
 )
 
 require (
-	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/bytedance/sonic v1.10.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
@@ -47,7 +45,6 @@ require (
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.1 // indirect
 	gorm.io/driver/sqlite v1.5.2 // indirect

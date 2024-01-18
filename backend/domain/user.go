@@ -25,9 +25,9 @@ type (
 		Books    []Book   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"books"`
 	}
 
-	IUserRepository interface {
-		CreateUser(u *User) error
-		GetUserByEmail(email string) (User, error)
+	IUserController interface {
+		Register(c *gin.Context)
+		Login(c *gin.Context)
 	}
 
 	IUserService interface {
@@ -35,9 +35,9 @@ type (
 		Login(c *gin.Context)
 	}
 
-	IUserController interface {
-		Register(c *gin.Context)
-		Login(c *gin.Context)
+	IUserRepository interface {
+		CreateUser(u *User) error
+		GetUserByEmail(email string) (User, error)
 	}
 )
 

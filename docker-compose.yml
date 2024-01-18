@@ -1,6 +1,22 @@
 version: "3"
 
 services:
+  backend:
+    image: gg/backend
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    restart: unless-stopped
+    environment:
+      - WEBAPP_HOST=localhost
+      - WEBAPP_PORT=8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=gg
+      - DB_PASSWORD=ggPwd!
+    ports:
+      - "19999:8080"
+
   db:
     image: postgres:alpine
     restart: unless-stopped
@@ -12,4 +28,3 @@ services:
       - ./docker/db:/var/lib/pgsql/data
     ports:
       - "1466:5432"
-
