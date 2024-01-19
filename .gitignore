@@ -8,3 +8,7 @@ docker/db
 wire_gen.go
 docs
 media
+
+#Ignore all dotfiles
+.*
+!/.gitignore

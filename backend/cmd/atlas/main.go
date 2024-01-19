@@ -14,6 +14,8 @@ import (
 var models = []any{
 	&domain.User{},
 	&domain.Book{},
+	&domain.Role{},
+	&domain.Permission{},
 }
 
 func main() {

@@ -1,8 +1,6 @@
 package user
 
 import (
-	"crypto/sha256"
-	"fmt"
 	"gg/domain"
 	"gg/utils/constants"
 	"gg/utils/dto"
@@ -33,7 +31,7 @@ func (us UserService) Register(c *gin.Context) {
 		panic.PanicException(constants.InternalError)
 	}
 
-	accessToken, err := token.GenerateToken(uint(user.ID))
+	accessToken, err := token.GenerateToken(user)
 
 	if err != nil {
 		panic.PanicException(constants.InternalError)
@@ -58,12 +56,11 @@ func (us UserService) Login(c *gin.Context) {
 		panic.PanicException(constants.DataNotFound)
 	}
 
-	password := fmt.Sprintf("%x", sha256.Sum256([]byte(loginUserForm.Password)))
-	if password != user.Password {
+	if err := user.ValidatePassword(loginUserForm.Password); err != nil {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	accessToken, err := token.GenerateToken(uint(user.ID))
+	accessToken, err := token.GenerateToken(user)
 	if err != nil {
 		panic.PanicException(constants.InternalError)
 	}

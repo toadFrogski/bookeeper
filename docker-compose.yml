@@ -26,6 +26,6 @@ services:
       - POSTGRES_USER=gg
       - POSTGRES_DB=gg
     volumes:
-      - ./docker/db:/var/lib/pgsql/data
+      - ./docker/db:/var/lib/postgresql/data
     ports:
       - "1466:5432"

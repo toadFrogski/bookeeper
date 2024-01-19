@@ -1,28 +1,22 @@
 package domain
 
 import (
-	"crypto/sha256"
-	"fmt"
+	"html"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
-const (
-	ADMIN UserRole = "admin"
-	USER  UserRole = "user"
-)
-
 type (
-	UserRole string
-
 	User struct {
-		ID       uint     `gorm:"primarykey"`
-		Username string   `gorm:"column:username" json:"username"`
-		Password string   `gorm:"password" json:"-"`
-		Email    string   `gorm:"column:email" json:"email"`
-		Role     UserRole `gorm:"column:role" json:"-"`
-		Books    []Book   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"books"`
+		ID       uint    `gorm:"primarykey"`
+		Username string  `gorm:"column:username" json:"username"`
+		Password string  `gorm:"password" json:"-"`
+		Email    string  `gorm:"column:email" json:"email"`
+		Books    []*Book `json:"-"`
+		Roles    []*Role `gorm:"many2many:user_roles" json:"-"`
 	}
 
 	IUserController interface {
@@ -41,8 +35,18 @@ type (
 	}
 )
 
-func (u *User) BeforeCreate(tx *gorm.DB) error {
-	u.Password = fmt.Sprintf("%x", sha256.Sum256([]byte(u.Password)))
+func (user *User) BeforeSave(*gorm.DB) error {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	user.Password = string(passwordHash)
+	user.Username = html.EscapeString(strings.TrimSpace(user.Username))
 
 	return nil
+}
+
+func (u *User) ValidatePassword(password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 }

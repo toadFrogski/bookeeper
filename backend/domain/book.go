@@ -12,7 +12,7 @@ type (
 		Description string `gorm:"column:description; text" json:"description"`
 		Photo       string `gorm:"column:photo" json:"photo"`
 		UserID      uint
-		User        User `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+		User        User
 	}
 
 	IBookController interface {

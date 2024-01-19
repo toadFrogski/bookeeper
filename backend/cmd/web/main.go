@@ -35,4 +35,5 @@ func initMiddlewares(r *gin.Engine) {
 	r.Use(gin.Recovery())
 	r.Use(middlewares.CORSMiddleware())
 	r.Use(middlewares.PanicHandleMiddleware())
+	r.Use(middlewares.JwtAuthMiddleware())
 }
