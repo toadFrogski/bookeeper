@@ -5,6 +5,7 @@ import (
 	"gg/database"
 	"gg/handlers"
 	"gg/middlewares"
+	"gg/utils/constants"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,4 +37,5 @@ func initMiddlewares(r *gin.Engine) {
 	r.Use(middlewares.CORSMiddleware())
 	r.Use(middlewares.PanicHandleMiddleware())
 	r.Use(middlewares.JwtAuthMiddleware())
+	r.Use(middlewares.RoleAccessMiddleware(constants.Admin))
 }

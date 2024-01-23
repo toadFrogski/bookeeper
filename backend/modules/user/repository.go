@@ -20,7 +20,7 @@ func (ur *UserRepository) CreateUser(u *domain.User) error {
 
 func (ur *UserRepository) GetUserByEmail(email string) (domain.User, error) {
 	user := domain.User{Email: email}
-	if err := ur.db.First(&user).Error; err != nil {
+	if err := ur.db.Preload("Roles").First(&user).Error; err != nil {
 		return domain.User{}, err
 	}
 

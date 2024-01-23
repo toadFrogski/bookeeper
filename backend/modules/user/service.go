@@ -26,13 +26,13 @@ func (us UserService) Register(c *gin.Context) {
 	user.Email = RegisterUserForm.Email
 	user.Username = RegisterUserForm.Username
 	user.Password = RegisterUserForm.Password
+	user.Roles = append(user.Roles, &domain.Role{Name: string(constants.User)})
 
 	if err := us.userRepo.CreateUser(&user); err != nil {
 		panic.PanicException(constants.InternalError)
 	}
 
 	accessToken, err := token.GenerateToken(user)
-
 	if err != nil {
 		panic.PanicException(constants.InternalError)
 	}

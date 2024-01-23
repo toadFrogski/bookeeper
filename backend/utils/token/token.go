@@ -18,11 +18,16 @@ func GenerateToken(user domain.User) (string, error) {
 		return "", err
 	}
 
+	roles := make([]string, len(user.Roles))
+	for i, role := range user.Roles {
+		roles[i] = role.Name
+	}
+
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["sub"] = map[string]interface{}{
+	claims["sub"] = map[string]any{
 		"userID": user.ID,
-		"roles":  user.Roles,
+		"roles":  roles,
 	}
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
