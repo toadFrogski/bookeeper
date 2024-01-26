@@ -31,14 +31,14 @@ var (
 
 func ProvideUserController(userSvc domain.IUserService) *UserController {
 	userCtlOnce.Do(func() {
-		userCtl = &UserController{userSvc: userSvc}
+		userCtl = &UserController{UserSvc: userSvc}
 	})
 	return userCtl
 }
 
 func ProvideUserService(userRepo domain.IUserRepository) *UserService {
 	userSvcOnce.Do(func() {
-		userSvc = &UserService{userRepo: userRepo}
+		userSvc = &UserService{UserRepo: userRepo}
 	})
 	return userSvc
 }

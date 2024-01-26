@@ -31,14 +31,14 @@ var (
 
 func ProvideBookController(bookSvc domain.IBookService, userSvc domain.IUserService) *BookController {
 	bookCtlOnce.Do(func() {
-		bookCtl = &BookController{bookSvc: bookSvc}
+		bookCtl = &BookController{BookSvc: bookSvc}
 	})
 	return bookCtl
 }
 
 func ProvideBookService(bookRepo domain.IBookRepository) *BookService {
 	bookSvcOnce.Do(func() {
-		bookSvc = &BookService{bookRepo: bookRepo}
+		bookSvc = &BookService{BookRepo: bookRepo}
 	})
 	return bookSvc
 }

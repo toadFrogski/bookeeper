@@ -2,28 +2,21 @@ package middlewares
 
 import (
 	"gg/utils/constants"
-	"gg/utils/dto"
 	"gg/utils/token"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func JwtAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		claims, err := token.ExtractTokenClaims(c)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, dto.BuildResponse[any](constants.InternalError, nil))
-			c.Abort()
-			return
+		user, err := token.ExtractTokenClaims(c)
+		if user == nil || err != nil {
+			user = &token.Claims{
+				UserID: 0,
+				Roles:  []constants.Role{constants.Anonymous},
+			}
 		}
-		if claims == nil {
-			c.JSON(http.StatusUnauthorized, dto.BuildResponse[any](constants.Unauthorized, nil))
-			c.Abort()
-			return
-		}
-
-		c.Set("user", claims)
+		c.Set("user", *user)
 		c.Next()
 	}
 }

@@ -11,13 +11,9 @@ type Response[T any] struct {
 }
 
 func BuildResponse[T any](status constants.ResponseStatus, data T) Response[T] {
-	return _BuildResponse[T](status.GetResponseStatus(), status.GetResponseMessage(), data)
-}
-
-func _BuildResponse[T any](code int, message string, data T) Response[T] {
 	return Response[T]{
-		ResponseCode:    code,
-		ResponseMessage: message,
+		ResponseCode:    status.GetResponseStatus(),
+		ResponseMessage: status.GetResponseMessage(),
 		Data:            data,
 	}
 }

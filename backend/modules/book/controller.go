@@ -8,7 +8,7 @@ import (
 )
 
 type BookController struct {
-	bookSvc domain.IBookService
+	BookSvc domain.IBookService
 }
 
 // GetAllBooks godoc
@@ -20,7 +20,7 @@ type BookController struct {
 // @Failure 400 {object} dto.Response[any]
 // @Router /book/ [get]
 func (bc BookController) GetAllBooks(c *gin.Context) {
-	bc.bookSvc.GetAllBooks(c)
+	bc.BookSvc.GetAllBooks(c)
 }
 
 // SaveBook godoc
@@ -35,7 +35,7 @@ func (bc BookController) GetAllBooks(c *gin.Context) {
 // @Failude 500 {object} dto.Response[any]
 // @Router /book/save [post]
 func (bc BookController) SaveBook(c *gin.Context) {
-	bc.bookSvc.SaveBook(c)
+	bc.BookSvc.SaveBook(c)
 }
 
 // GetBook godoc
@@ -46,7 +46,7 @@ func (bc BookController) SaveBook(c *gin.Context) {
 // @Failude 500 {object} dto.Response[any]
 // @Router /book/{book_id} [get]
 func (bc BookController) GetBook(c *gin.Context) {
-	bc.bookSvc.GetBook(c)
+	bc.BookSvc.GetBook(c)
 }
 
 // DeleteBook godoc
@@ -56,5 +56,5 @@ func (bc BookController) GetBook(c *gin.Context) {
 // @Failure 400 {object} dto.Response[any]
 // @Router /book/{book_id} [delete]
 func (bc BookController) DeleteBookByID(c *gin.Context) {
-	bc.bookSvc.DeleteBookByID(c)
+	bc.BookSvc.DeleteBookByID(c)
 }

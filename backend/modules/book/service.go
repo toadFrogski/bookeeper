@@ -16,11 +16,11 @@ import (
 )
 
 type BookService struct {
-	bookRepo domain.IBookRepository
+	BookRepo domain.IBookRepository
 }
 
 func (bs BookService) GetAllBooks(c *gin.Context) {
-	data, err := bs.bookRepo.GetAllBooks()
+	data, err := bs.BookRepo.GetAllBooks()
 	if err != nil {
 		panic.PanicException(constants.DataNotFound)
 	}
@@ -53,7 +53,7 @@ func (bs BookService) SaveBook(c *gin.Context) {
 		Photo:       fpath,
 	}
 
-	if err := bs.bookRepo.CreateBook(&book); err != nil {
+	if err := bs.BookRepo.CreateBook(&book); err != nil {
 		panic.PanicException(constants.InternalError)
 	}
 
@@ -62,7 +62,7 @@ func (bs BookService) SaveBook(c *gin.Context) {
 }
 
 func (bs BookService) GetBook(c *gin.Context) {
-	book, err := bs.bookRepo.GetUserBookByID(c.Param("bookID"))
+	book, err := bs.BookRepo.GetUserBookByID(c.Param("bookID"))
 	if err != nil {
 		panic.PanicException(constants.DataNotFound)
 	}
@@ -70,7 +70,7 @@ func (bs BookService) GetBook(c *gin.Context) {
 }
 
 func (bs BookService) DeleteBookByID(c *gin.Context) {
-	bs.bookRepo.DeleteBookByID(c.Param("bookID"))
+	bs.BookRepo.DeleteBookByID(c.Param("bookID"))
 }
 
 func validateSaveBookForm(form *SaveBookForm) error {

@@ -12,27 +12,35 @@ import (
 )
 
 type UserService struct {
-	userRepo domain.IUserRepository
+	UserRepo domain.IUserRepository
 }
 
 func (us UserService) Register(c *gin.Context) {
-	var user domain.User
+	var user *domain.User
+	var assertUser *domain.User
 	var RegisterUserForm RegisterUserForm
 
 	if err := c.ShouldBind(&RegisterUserForm); err != nil {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
+	if err := userRepo.db.Model(domain.User{}).Where("email = ?", RegisterUserForm.Email).First(&assertUser).Error; err != nil {
+		panic.PanicException(constants.InvalidRequest)
+	}
+
+	if assertUser != nil {
+		panic.PanicException(constants.RegistredEmail)
+	}
+
 	user.Email = RegisterUserForm.Email
 	user.Username = RegisterUserForm.Username
 	user.Password = RegisterUserForm.Password
-	user.Roles = append(user.Roles, &domain.Role{Name: string(constants.User)})
 
-	if err := us.userRepo.CreateUser(&user); err != nil {
+	if err := us.UserRepo.CreateUser(user); err != nil {
 		panic.PanicException(constants.InternalError)
 	}
 
-	accessToken, err := token.GenerateToken(user)
+	accessToken, err := token.GenerateToken(*user)
 	if err != nil {
 		panic.PanicException(constants.InternalError)
 	}
@@ -51,7 +59,7 @@ func (us UserService) Login(c *gin.Context) {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	user, err := us.userRepo.GetUserByEmail(loginUserForm.Email)
+	user, err := us.UserRepo.GetUserByEmail(loginUserForm.Email)
 	if err != nil {
 		panic.PanicException(constants.DataNotFound)
 	}

@@ -33,20 +33,38 @@ func PanicHandler(c *gin.Context) {
 		str := fmt.Sprint(err)
 		strArr := strings.Split(str, ":")
 
-		status, _ := strconv.Atoi(strArr[0])
+		code, _ := strconv.Atoi(strArr[0])
+		message := strArr[1]
 
-		switch status {
+		if code < 1000 {
+			c.JSON(http.StatusInternalServerError, dto.BuildResponse[any](constants.InternalError, nil))
+			c.Abort()
+		}
+
+		switch code {
 		case constants.DataNotFound.GetResponseStatus():
-			c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.DataNotFound, nil))
+			c.JSON(http.StatusBadRequest,
+				dto.BuildResponse[any](constants.DataNotFound, nil))
 			c.Abort()
 		case constants.Unauthorized.GetResponseStatus():
-			c.JSON(http.StatusUnauthorized, dto.BuildResponse[any](constants.Unauthorized, nil))
+			c.JSON(http.StatusUnauthorized,
+				dto.BuildResponse[any](constants.Unauthorized, nil))
 			c.Abort()
 		case constants.InvalidRequest.GetResponseStatus():
-			c.JSON(http.StatusBadRequest, dto.BuildResponse[string](constants.InvalidRequest, strArr[1]))
+			c.JSON(http.StatusBadRequest,
+				dto.BuildResponse[string](constants.InvalidRequest, message))
+			c.Abort()
+		case constants.UnknownError.GetResponseStatus():
+			c.JSON(http.StatusInternalServerError,
+				dto.BuildResponse[any](constants.UnknownError, nil))
+			c.Abort()
+		case constants.InternalError.GetResponseStatus():
+			c.JSON(http.StatusInternalServerError,
+				dto.BuildResponse[any](constants.InternalError, nil))
 			c.Abort()
 		default:
-			c.JSON(http.StatusInternalServerError, dto.BuildResponse[any](constants.UnknownError, nil))
+			c.JSON(http.StatusInternalServerError,
+				dto.Response[any]{ResponseCode: code, ResponseMessage: message, Data: nil})
 			c.Abort()
 		}
 	}
