@@ -12,13 +12,16 @@ type BookController struct {
 	BookSvc domain.IBookService
 }
 
-// GetAllBooks godoc
+// GetBookList godoc
 //
-// @Summary Get all books
+// @Summary Get book list
 // @Accept json
 // @Produce json
-// @Success 200 {object} dto.Response[paginator.Paginator[[]domain.Book]]
-// @Failure 400 {object} dto.Response[any]
+// @Param page query int false "Page number"
+// @Param limit query int false "Limit books per page"
+// @Param sort query string false "Sorting"
+// @Success 200 {object} BookListResponse
+// @Failure 400 {object} AnyResponse
 // @Router /book/ [get]
 func (bc BookController) GetBookList(c *gin.Context) {
 	bc.BookSvc.GetBookList(c)
@@ -31,9 +34,9 @@ func (bc BookController) GetBookList(c *gin.Context) {
 // @Produce json
 // @Param image formData file true "Image to be uploaded"
 // @Param name formData string true "Name of book"
-// @Success 200 {object} dto.Response[any]
-// @Failude 400 {object} dto.Response[any]
-// @Failude 500 {object} dto.Response[any]
+// @Success 200 {object} AnyResponse
+// @Failude 400 {object} AnyResponse
+// @Failude 500 {object} AnyResponse
 // @Router /book/save [post]
 func (bc BookController) SaveBook(c *gin.Context) {
 	bc.BookSvc.SaveBook(c)
@@ -42,9 +45,9 @@ func (bc BookController) SaveBook(c *gin.Context) {
 // GetBook godoc
 // @Summary Get book by ID
 // @Param book_id path int true "Book ID"
-// @Success 200 {object} dto.Response[domain.Book]
-// @Failude 400 {object} dto.Response[any]
-// @Failude 500 {object} dto.Response[any]
+// @Success 200 {object} BookResponse
+// @Failude 400 {object} AnyResponse
+// @Failude 500 {object} AnyResponse
 // @Router /book/{book_id} [get]
 func (bc BookController) GetBook(c *gin.Context) {
 	bc.BookSvc.GetBook(c)
@@ -53,8 +56,8 @@ func (bc BookController) GetBook(c *gin.Context) {
 // DeleteBook godoc
 // @Summmary Delete book by ID
 // @Param book_id path int true "Book ID"
-// @Success 200 {object} dto.Response[any]
-// @Failure 400 {object} dto.Response[any]
+// @Success 200 {object} AnyResponse
+// @Failure 400 {object} AnyResponse
 // @Router /book/{book_id} [delete]
 func (bc BookController) DeleteBookByID(c *gin.Context) {
 	bc.BookSvc.DeleteBookByID(c)

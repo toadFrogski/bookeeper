@@ -16,19 +16,21 @@ type UserService struct {
 }
 
 func (us UserService) Register(c *gin.Context) {
-	var user *domain.User
-	var assertUser *domain.User
+	var user domain.User
 	var RegisterUserForm RegisterUserForm
+	var userExist bool
 
 	if err := c.ShouldBind(&RegisterUserForm); err != nil {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	if err := userRepo.db.Model(domain.User{}).Where("email = ?", RegisterUserForm.Email).First(&assertUser).Error; err != nil {
+	if err := userRepo.db.Model(domain.User{}).
+		Select("count(*) > 0").Where("email = ?", RegisterUserForm.Email).
+		Find(&userExist).Error; err != nil {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	if assertUser != nil {
+	if userExist {
 		panic.PanicException(constants.RegistredEmail)
 	}
 
@@ -36,18 +38,18 @@ func (us UserService) Register(c *gin.Context) {
 	user.Username = RegisterUserForm.Username
 	user.Password = RegisterUserForm.Password
 
-	if err := us.UserRepo.CreateUser(user); err != nil {
+	if err := us.UserRepo.CreateUser(&user); err != nil {
 		panic.PanicException(constants.InternalError)
 	}
 
-	accessToken, err := token.GenerateToken(*user)
+	accessToken, err := token.GenerateToken(user)
 	if err != nil {
 		panic.PanicException(constants.InternalError)
 	}
 
 	c.JSON(
 		http.StatusCreated,
-		dto.BuildResponse[AuthResponse](constants.Success, AuthResponse{Token: accessToken}),
+		dto.BuildResponse[Auth](constants.Success, Auth{Token: accessToken}),
 	)
 }
 
@@ -75,10 +77,17 @@ func (us UserService) Login(c *gin.Context) {
 
 	c.JSON(
 		http.StatusOK,
-		dto.BuildResponse[AuthResponse](constants.Success, AuthResponse{Token: accessToken}),
+		dto.BuildResponse[Auth](constants.Success, Auth{Token: accessToken}),
 	)
 }
 
-func (us UserService) GetUserInfo(c *gin.Context) {
-	c.JSON(http.StatusOK, dto.BuildResponse[string](constants.Success, "test"))
+func (us UserService) GetUserInfo(c *gin.Context, userID uint) {
+	var user *domain.User
+
+	user, err := us.UserRepo.GetUserInfoByID(userID)
+	if err != nil {
+		panic.PanicException(constants.DataNotFound)
+	}
+
+	c.JSON(http.StatusOK, dto.BuildResponse[domain.User](constants.Success, *user))
 }

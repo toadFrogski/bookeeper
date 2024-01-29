@@ -11,17 +11,19 @@ import (
 
 func RoleAccessMiddleware(accessRoles []constants.Role) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user, exist := c.Get("user")
+		var user token.Claims
+		claims, exist := c.Get("user")
 		if !exist {
 			c.JSON(http.StatusInternalServerError, dto.BuildResponse[any](constants.InternalError, nil))
 			c.Abort()
 			return
 		}
-		userRoles := user.(token.Claims).Roles
+		user = claims.(token.Claims)
+		userRoles := user.Roles
 
 		for _, accessRole := range accessRoles {
 			for _, userRole := range userRoles {
-				if string(accessRole) == string(userRole) {
+				if accessRole == userRole {
 					c.Next()
 					return
 				}
