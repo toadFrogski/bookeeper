@@ -22,7 +22,10 @@ func (br BookRepository) GetAllBooks() ([]*domain.Book, error) {
 
 func (br BookRepository) GetBookList(p paginator.Paginator[[]*domain.Book]) ([]*domain.Book, error) {
 	var books []*domain.Book
-	if err := br.db.Scopes(p.Paginate(books, br.db)).Find(&books).Error; err != nil {
+	if err := br.db.Scopes(p.Paginate(books, br.db)).
+		Preload("User", func(tx *gorm.DB) *gorm.DB {
+			return tx.Select("ID", "Email", "Avatar")
+		}).Find(&books).Error; err != nil {
 		return nil, err
 	}
 
@@ -56,7 +59,7 @@ func (br BookRepository) DeleteBookByID(ID string) error {
 func (br BookRepository) GetUserBookByID(ID string) (*domain.Book, error) {
 	var book domain.Book
 
-	if err := br.db.Model(domain.Book{}).Joins("User").First(&book, ID).Error; err != nil {
+	if err := br.db.Model(domain.Book{}).First(&book, ID).Error; err != nil {
 		return nil, err
 	}
 

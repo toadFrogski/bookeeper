@@ -1,5 +1,10 @@
 package user
 
+import (
+	"gg/domain"
+	"gg/utils/dto"
+)
+
 type (
 	RegisterUserForm struct {
 		Email    string `json:"email" binding:"required"`
@@ -12,7 +17,10 @@ type (
 		Password string `json:"password" binding:"required"`
 	} // @name LoginUserForm
 
-	AuthResponse struct {
+	Auth struct {
 		Token string `json:"token"`
-	} // @name AuthResponse
+	} // @name Auth
+
+	AuthResponse = dto.Response[Auth]        // @name AuthResponse
+	UserResponse = dto.Response[domain.User] // @name UserResponse
 )

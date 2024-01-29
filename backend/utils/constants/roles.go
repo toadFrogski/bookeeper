@@ -1,6 +1,6 @@
 package constants
 
-type Role string
+type Role = string
 
 const (
 	Admin     Role = "admin"

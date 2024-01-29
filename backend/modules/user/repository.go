@@ -35,3 +35,15 @@ func (ur *UserRepository) GetUserByID(ID uint) (*domain.User, error) {
 
 	return user, nil
 }
+
+func (ur *UserRepository) GetUserInfoByID(ID uint) (*domain.User, error) {
+	var user *domain.User
+	if err := ur.db.Model(&domain.User{}).
+		Preload("Books", func(tx *gorm.DB) *gorm.DB {
+			return tx.Omit("User")
+		}).First(&user, ID).Error; err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}

@@ -19,7 +19,7 @@ const (
 func (r ResponseStatus) GetResponseStatus() int {
 	return [...]int{
 		// Common status codes
-		1000, 1001, 1002, 1003, 1004, 1005,
+		1000, 1001, 1002, 1003, 1004, 1005, 1006,
 		// User status codes
 		2001,
 	}[r]

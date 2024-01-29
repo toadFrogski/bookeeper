@@ -4,11 +4,15 @@ import (
 	"gg/utils/constants"
 )
 
-type Response[T any] struct {
-	ResponseCode    int    `json:"response_code"`
-	ResponseMessage string `json:"response_messsage"`
-	Data            T      `json:"data"`
-} // @name Response
+type (
+	Response[T any] struct {
+		ResponseCode    int    `json:"response_code"`
+		ResponseMessage string `json:"response_messsage"`
+		Data            T      `json:"data"`
+	} // @name Response
+
+	AnyResponse = Response[any] // @name AnyResponse
+)
 
 func BuildResponse[T any](status constants.ResponseStatus, data T) Response[T] {
 	return Response[T]{

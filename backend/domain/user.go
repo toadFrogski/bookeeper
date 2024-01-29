@@ -12,30 +12,34 @@ import (
 
 type (
 	User struct {
-		ID       uint    `gorm:"primarykey"`
-		Username string  `gorm:"column:username" json:"username"`
-		Password string  `gorm:"password" json:"-"`
-		Email    string  `gorm:"column:email;uniqueIndex" json:"email"`
-		Books    []*Book `json:"-"`
-		Roles    []*Role `gorm:"many2many:user_roles" json:"-"`
+		ID          uint    `gorm:"primarykey"`
+		Username    string  `gorm:"column:username" json:"username"`
+		Password    string  `gorm:"password;" json:"-"`
+		Email       string  `gorm:"column:email;uniqueIndex" json:"email"`
+		Description string  `gorm:"column:description; text" json:"description"`
+		Avatar      string  `gorm:"column:avatar" json:"avatar"`
+		Books       []*Book `json:"books,omitempty"`
+		Roles       []*Role `gorm:"many2many:user_roles" json:"-"`
 	} // @name User
 
 	IUserController interface {
 		Register(c *gin.Context)
 		Login(c *gin.Context)
 		GetUserInfo(c *gin.Context)
+		GetUserInfoByID(c *gin.Context)
 	}
 
 	IUserService interface {
 		Register(c *gin.Context)
 		Login(c *gin.Context)
-		GetUserInfo(c *gin.Context)
+		GetUserInfo(c *gin.Context, userID uint)
 	}
 
 	IUserRepository interface {
 		CreateUser(u *User) error
 		GetUserByEmail(email string) (*User, error)
 		GetUserByID(ID uint) (*User, error)
+		GetUserInfoByID(ID uint) (*User, error)
 	}
 )
 
@@ -47,6 +51,7 @@ func (user *User) BeforeSave(tx *gorm.DB) error {
 
 	user.Password = string(passwordHash)
 	user.Username = html.EscapeString(strings.TrimSpace(user.Username))
+	user.Description = html.EscapeString(user.Description)
 
 	var userRole Role
 	if err := tx.Where("name = ?", constants.User).First(&userRole).Error; err != nil {

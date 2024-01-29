@@ -14,7 +14,7 @@ type (
 		Description string `gorm:"column:description; text" json:"description"`
 		Photo       string `gorm:"column:photo" json:"photo"`
 		UserID      uint   `json:"-"`
-		User        User
+		User        *User  `json:"user,omitempty"`
 	} // @name Book
 
 	IBookController interface {
