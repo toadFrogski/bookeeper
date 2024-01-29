@@ -18,21 +18,24 @@ type (
 		Email    string  `gorm:"column:email;uniqueIndex" json:"email"`
 		Books    []*Book `json:"-"`
 		Roles    []*Role `gorm:"many2many:user_roles" json:"-"`
-	}
+	} // @name User
 
 	IUserController interface {
 		Register(c *gin.Context)
 		Login(c *gin.Context)
+		GetUserInfo(c *gin.Context)
 	}
 
 	IUserService interface {
 		Register(c *gin.Context)
 		Login(c *gin.Context)
+		GetUserInfo(c *gin.Context)
 	}
 
 	IUserRepository interface {
 		CreateUser(u *User) error
-		GetUserByEmail(email string) (User, error)
+		GetUserByEmail(email string) (*User, error)
+		GetUserByID(ID uint) (*User, error)
 	}
 )
 

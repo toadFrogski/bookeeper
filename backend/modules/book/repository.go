@@ -2,6 +2,7 @@ package book
 
 import (
 	"gg/domain"
+	"gg/utils/paginator"
 
 	"gorm.io/gorm"
 )
@@ -10,9 +11,18 @@ type BookRepository struct {
 	db *gorm.DB
 }
 
-func (br BookRepository) GetAllBooks() ([]domain.Book, error) {
-	var books []domain.Book
+func (br BookRepository) GetAllBooks() ([]*domain.Book, error) {
+	var books []*domain.Book
 	if err := br.db.Find(&books).Error; err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}
+
+func (br BookRepository) GetBookList(p paginator.Paginator[[]*domain.Book]) ([]*domain.Book, error) {
+	var books []*domain.Book
+	if err := br.db.Scopes(p.Paginate(books, br.db)).Find(&books).Error; err != nil {
 		return nil, err
 	}
 

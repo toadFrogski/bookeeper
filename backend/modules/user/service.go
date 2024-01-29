@@ -47,12 +47,12 @@ func (us UserService) Register(c *gin.Context) {
 
 	c.JSON(
 		http.StatusCreated,
-		dto.BuildResponse[map[string]string](constants.Success, map[string]string{"token": accessToken}),
+		dto.BuildResponse[AuthResponse](constants.Success, AuthResponse{Token: accessToken}),
 	)
 }
 
 func (us UserService) Login(c *gin.Context) {
-	var user domain.User
+	var user *domain.User
 	var loginUserForm LoginUserForm
 
 	if err := c.ShouldBind(&loginUserForm); err != nil {
@@ -68,13 +68,17 @@ func (us UserService) Login(c *gin.Context) {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	accessToken, err := token.GenerateToken(user)
+	accessToken, err := token.GenerateToken(*user)
 	if err != nil {
 		panic.PanicException(constants.InternalError)
 	}
 
 	c.JSON(
 		http.StatusOK,
-		dto.BuildResponse[map[string]string](constants.Success, map[string]string{"token": accessToken}),
+		dto.BuildResponse[AuthResponse](constants.Success, AuthResponse{Token: accessToken}),
 	)
+}
+
+func (us UserService) GetUserInfo(c *gin.Context) {
+	c.JSON(http.StatusOK, dto.BuildResponse[string](constants.Success, "test"))
 }

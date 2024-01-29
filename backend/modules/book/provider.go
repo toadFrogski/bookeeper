@@ -29,7 +29,7 @@ var (
 	)
 )
 
-func ProvideBookController(bookSvc domain.IBookService, userSvc domain.IUserService) *BookController {
+func ProvideBookController(bookSvc domain.IBookService) *BookController {
 	bookCtlOnce.Do(func() {
 		bookCtl = &BookController{BookSvc: bookSvc}
 	})

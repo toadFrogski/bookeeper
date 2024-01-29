@@ -3,7 +3,7 @@ package main
 import (
 	config "gg/conf"
 	"gg/database"
-	"gg/handlers"
+	routes "gg/handlers"
 	"gg/middlewares"
 
 	"github.com/gin-gonic/gin"
@@ -23,11 +23,11 @@ func main() {
 }
 
 func initRoutes(r *gin.Engine) {
-	handlers.GetAuthRoutes(r)
+	routes.GetAuthRoutes(r)
 	v1 := r.Group("/v1")
 	{
-		handlers.GetBooksRoutes(v1)
-		handlers.GetUserRoutes(v1)
+		routes.GetBooksRoutes(v1)
+		routes.GetUserRoutes(v1)
 	}
 }
 

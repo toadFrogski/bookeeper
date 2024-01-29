@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"gg/utils/paginator"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,27 +13,27 @@ type (
 		Author      string `gorm:"column:author" json:"author"`
 		Description string `gorm:"column:description; text" json:"description"`
 		Photo       string `gorm:"column:photo" json:"photo"`
-		UserID      uint
+		UserID      uint   `json:"-"`
 		User        User
-	}
+	} // @name Book
 
 	IBookController interface {
-		GetAllBooks(c *gin.Context)
 		GetBook(c *gin.Context)
+		GetBookList(c *gin.Context)
 		SaveBook(c *gin.Context)
 		DeleteBookByID(c *gin.Context)
 	}
 
 	IBookService interface {
-		GetAllBooks(c *gin.Context)
 		GetBook(c *gin.Context)
+		GetBookList(c *gin.Context)
 		SaveBook(c *gin.Context)
 		DeleteBookByID(c *gin.Context)
 	}
 
 	IBookRepository interface {
-		GetAllBooks() ([]Book, error)
 		CreateBook(book *Book) error
+		GetBookList(paginator paginator.Paginator[[]*Book]) ([]*Book, error)
 		DeleteBook(book *Book) error
 		DeleteBookByID(ID string) error
 		GetUserBookByID(ID string) (*Book, error)

@@ -10,6 +10,7 @@ const (
 	InvalidRequest
 	InternalError
 	UnknownError
+	PermissionDenied
 
 	// User statuses
 	RegistredEmail
@@ -27,7 +28,9 @@ func (r ResponseStatus) GetResponseStatus() int {
 func (r ResponseStatus) GetResponseMessage() string {
 	return [...]string{
 		// Common status messages
-		"SUCCESS", "UNAUTHORIZED", "DATA_NOT_FOUND", "INVALID_REQUEST", "INTERNAL_ERROR", "UNKNOWN_ERROR",
+		"SUCCESS", "UNAUTHORIZED", "DATA_NOT_FOUND", "INVALID_REQUEST",
+		"INTERNAL_ERROR", "UNKNOWN_ERROR", "PERMISSION_DENIED",
+
 		// User status messages
 		"REGISTRED_EMAIL",
 	}[r]

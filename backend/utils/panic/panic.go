@@ -39,6 +39,7 @@ func PanicHandler(c *gin.Context) {
 		if code < 1000 {
 			c.JSON(http.StatusInternalServerError, dto.BuildResponse[any](constants.InternalError, nil))
 			c.Abort()
+			return
 		}
 
 		switch code {
@@ -63,7 +64,7 @@ func PanicHandler(c *gin.Context) {
 				dto.BuildResponse[any](constants.InternalError, nil))
 			c.Abort()
 		default:
-			c.JSON(http.StatusInternalServerError,
+			c.JSON(http.StatusBadRequest,
 				dto.Response[any]{ResponseCode: code, ResponseMessage: message, Data: nil})
 			c.Abort()
 		}

@@ -3,6 +3,7 @@ package book
 import (
 	"gg/domain"
 	_ "gg/utils/dto"
+	_ "gg/utils/paginator"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,11 +17,11 @@ type BookController struct {
 // @Summary Get all books
 // @Accept json
 // @Produce json
-// @Success 200 {object} dto.Response[domain.Book]
+// @Success 200 {object} dto.Response[paginator.Paginator[[]domain.Book]]
 // @Failure 400 {object} dto.Response[any]
 // @Router /book/ [get]
-func (bc BookController) GetAllBooks(c *gin.Context) {
-	bc.BookSvc.GetAllBooks(c)
+func (bc BookController) GetBookList(c *gin.Context) {
+	bc.BookSvc.GetBookList(c)
 }
 
 // SaveBook godoc
