@@ -3,20 +3,14 @@ package token
 import (
 	"fmt"
 	"gg/domain"
-	"gg/utils/constants"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	jwt "github.com/golang-jwt/jwt/v5"
 )
-
-type Claims struct {
-	UserID float64
-	Roles  []constants.Role
-}
 
 func GenerateToken(user domain.User) (string, error) {
 	token_lifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
@@ -24,19 +18,11 @@ func GenerateToken(user domain.User) (string, error) {
 		return "", err
 	}
 
-	roles := make([]constants.Role, len(user.Roles))
-	for i, role := range user.Roles {
-		roles[i] = role.Name
-	}
-
-	claims := jwt.MapClaims{}
-	claims["authorized"] = true
-	claims["sub"] = Claims{
-		UserID: float64(user.ID),
-		Roles:  roles,
-	}
-	claims["exp"] = time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"authorized": true,
+		"sub":        strconv.Itoa(int(user.ID)),
+		"exp":        time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix(),
+	})
 
 	return token.SignedString([]byte(os.Getenv("API_SECRET")))
 }
@@ -54,37 +40,21 @@ func ExtractToken(c *gin.Context) string {
 	return ""
 }
 
-func ExtractTokenClaims(c *gin.Context) (*Claims, error) {
+func ExtractTokenClaims(c *gin.Context) (*jwt.MapClaims, error) {
 	tokenString := ExtractToken(c)
-	token, err := jwt.Parse(tokenString, _validateToken)
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(os.Getenv("API_SECRET")), nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if ok && token.Valid {
-		var roles []constants.Role
 
-		sub := claims["sub"].(map[string]any)
-		userID := sub["UserID"].(float64)
-		for _, role := range sub["Roles"].([]any) {
-			roles = append(roles, constants.Role(role.(string)))
-		}
-
-		return &Claims{
-			UserID: userID,
-			Roles:  roles,
-		}, nil
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		return &claims, nil
 	}
 	return nil, nil
-}
-
-func _validateToken(token *jwt.Token) (interface{}, error) {
-	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-		return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-	}
-	if err := token.Claims.Valid(); err != nil {
-		return nil, err
-	}
-
-	return []byte(os.Getenv("API_SECRET")), nil
 }

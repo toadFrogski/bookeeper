@@ -7,8 +7,8 @@ toolchain go1.21.5
 require (
 	ariga.io/atlas-go-sdk v0.1.1-0.20231001054405-7edfcfc14f1c
 	ariga.io/atlas-provider-gorm v0.1.1
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/wire v0.5.0
 	golang.org/x/crypto v0.18.0
 	gorm.io/driver/postgres v1.5.3

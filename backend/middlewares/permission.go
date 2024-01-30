@@ -1,9 +1,10 @@
 package middlewares
 
 import (
+	"fmt"
+	"gg/domain"
 	"gg/utils/constants"
 	"gg/utils/dto"
-	"gg/utils/token"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,19 +12,20 @@ import (
 
 func RoleAccessMiddleware(accessRoles []constants.Role) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var user token.Claims
-		claims, exist := c.Get("user")
+		var user *domain.User
+		vars, exist := c.Get("user")
 		if !exist {
 			c.JSON(http.StatusInternalServerError, dto.BuildResponse[any](constants.InternalError, nil))
 			c.Abort()
 			return
 		}
-		user = claims.(token.Claims)
-		userRoles := user.Roles
+		user = vars.(*domain.User)
+		fmt.Printf("%x", user)
+		// userRoles := user.Roles
 
 		for _, accessRole := range accessRoles {
-			for _, userRole := range userRoles {
-				if accessRole == userRole {
+			for _, userRole := range user.Roles {
+				if accessRole == userRole.Name {
 					c.Next()
 					return
 				}

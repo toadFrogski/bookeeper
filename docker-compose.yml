@@ -16,6 +16,8 @@ services:
       - DB_PASSWORD
       - DB_DATABASE
       - MEDIA_DIRECTORY
+      - TOKEN_HOUR_LIFESPAN
+      - API_SECRET
     ports:
       - "8081:80"
 

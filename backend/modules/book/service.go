@@ -9,12 +9,10 @@ import (
 	"gg/utils/dto"
 	p "gg/utils/paginator"
 	"gg/utils/panic"
-	"gg/utils/token"
 	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
-	"slices"
 	"strconv"
 	"time"
 
@@ -59,7 +57,7 @@ func (bs BookService) GetBookList(c *gin.Context) {
 
 func (bs BookService) SaveBook(c *gin.Context) {
 	var saveBookForm SaveBookForm
-	var user token.Claims
+	var user *domain.User
 
 	media := os.Getenv("MEDIA_DIRECTORY")
 
@@ -75,7 +73,7 @@ func (bs BookService) SaveBook(c *gin.Context) {
 	if !exist {
 		panic.PanicException(constants.InternalError)
 	}
-	user = claims.(token.Claims)
+	user = claims.(*domain.User)
 
 	fpath := filepath.Join(time.Now().Format("20060102"),
 		string(saveBookForm.UserID)+
@@ -87,7 +85,7 @@ func (bs BookService) SaveBook(c *gin.Context) {
 		Name:        saveBookForm.Name,
 		Author:      saveBookForm.Author,
 		Description: saveBookForm.Description,
-		UserID:      uint(user.UserID),
+		UserID:      user.ID,
 		Photo:       fpath,
 	}
 
@@ -112,22 +110,27 @@ func (bs BookService) GetBook(c *gin.Context) {
 
 func (bs BookService) DeleteBookByID(c *gin.Context) {
 	var book *domain.Book
-	var user token.Claims
+	var user *domain.User
 
 	media := os.Getenv("MEDIA_DIRECTORY")
 
-	claims, exist := c.Get("user")
+	vars, exist := c.Get("user")
 	if !exist {
 		panic.PanicException(constants.InternalError)
 	}
-	user = claims.(token.Claims)
+	user = vars.(*domain.User)
 
 	book, err := bs.BookRepo.GetUserBookByID(c.Param("bookID"))
 	if err != nil {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	if canDelete := uint(user.UserID) == book.UserID || slices.Contains(user.Roles, constants.Admin); !canDelete {
+	canDelete := user.ID == book.ID
+	for _, userRole := range user.Roles {
+		canDelete = canDelete || userRole.Name == constants.Admin
+	}
+
+	if !canDelete {
 		panic.PanicException(constants.PermissionDenied)
 	}
 

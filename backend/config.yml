@@ -1,9 +1,0 @@
-server:
-  port: 7777
-
-database:
-  host: 127.0.0.1
-  port: 1466
-  username: gg
-  password: ggPwd!
-  database: gg

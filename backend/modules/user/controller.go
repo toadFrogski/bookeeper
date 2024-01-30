@@ -5,7 +5,6 @@ import (
 	"gg/utils/constants"
 	_ "gg/utils/dto"
 	"gg/utils/panic"
-	"gg/utils/token"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -49,13 +48,13 @@ func (uc UserController) Login(c *gin.Context) {
 // @Failure 500 {object} AnyResponse
 // @Router /profile [get]
 func (uc UserController) GetUserInfo(c *gin.Context) {
-	var user token.Claims
-	claims, exist := c.Get("user")
+	var user *domain.User
+	vars, exist := c.Get("user")
 	if !exist {
 		panic.PanicException(constants.InternalError)
 	}
-	user = claims.(token.Claims)
-	uc.UserSvc.GetUserInfo(c, uint(user.UserID))
+	user = vars.(*domain.User)
+	uc.UserSvc.GetUserInfo(c, user.ID)
 }
 
 // GetUserInfoByID godoc
