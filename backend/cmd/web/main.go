@@ -1,13 +1,15 @@
 package main
 
 import (
-	config "gg/conf"
 	"gg/database"
 	routes "gg/handlers"
 	"gg/middlewares"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
+
+const SOCKET_PATH = "/var/run/www.sock"
 
 // @title GG backend API
 // @version 1.0
@@ -19,7 +21,9 @@ func main() {
 
 	initMiddlewares(r)
 	initRoutes(r)
-	r.Run(config.GetListenAddr())
+
+	os.Remove(SOCKET_PATH)
+	r.RunUnix(SOCKET_PATH)
 }
 
 func initRoutes(r *gin.Engine) {

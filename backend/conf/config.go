@@ -5,13 +5,6 @@ import (
 	"os"
 )
 
-func GetListenAddr() string {
-	host := os.Getenv("WEBAPP_HOST")
-	port := os.Getenv("WEBAPP_PORT")
-
-	return fmt.Sprintf("%s:%s", host, port)
-}
-
 func GetDSN() string {
 	host := os.Getenv("DB_HOST")
 	username := os.Getenv("DB_USERNAME")

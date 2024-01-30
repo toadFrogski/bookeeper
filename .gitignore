@@ -2,12 +2,15 @@
 .vscode
 
 #Docker
-docker/db
+docker-compose.override.yml
 
 # Golang tools
 wire_gen.go
 docs
+
+# Data directories
 media
+data
 
 #Ignore all dotfiles
 .*

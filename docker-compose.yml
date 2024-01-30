@@ -1,6 +1,19 @@
 version: "3"
 
+volumes:
+  backend_sock:
+
 services:
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      - backend
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - backend_sock:/var/run/backend
+
   backend:
     image: gg/backend
     build:
@@ -8,8 +21,6 @@ services:
       dockerfile: ../docker/backend/Dockerfile
     restart: unless-stopped
     environment:
-      - WEBAPP_HOST
-      - WEBAPP_PORT
       - DB_HOST
       - DB_PORT
       - DB_USERNAME
@@ -18,8 +29,8 @@ services:
       - MEDIA_DIRECTORY
       - TOKEN_HOUR_LIFESPAN
       - API_SECRET
-    ports:
-      - "8081:80"
+    volumes:
+      - backend_sock:/var/run
 
   db:
     image: postgres:alpine
@@ -29,6 +40,5 @@ services:
       - POSTGRES_USER
       - POSTGRES_DB
     volumes:
-      - ./docker/db:/var/lib/postgresql/data
-    ports:
-      - "1466:5432"
+      - ./data:/var/lib/postgresql/data
+
