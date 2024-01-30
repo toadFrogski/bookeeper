@@ -1,7 +1,6 @@
 package book
 
 import (
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"gg/domain"
@@ -9,6 +8,7 @@ import (
 	"gg/utils/dto"
 	p "gg/utils/paginator"
 	"gg/utils/panic"
+	"html"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -78,7 +78,7 @@ func (bs BookService) SaveBook(c *gin.Context) {
 	fpath := filepath.Join(time.Now().Format("20060102"),
 		string(saveBookForm.UserID)+
 			string(time.Now().Unix())+
-			base64.StdEncoding.EncodeToString([]byte(saveBookForm.Photo.Filename)),
+			html.EscapeString(saveBookForm.Photo.Filename),
 	)
 
 	book := domain.Book{
