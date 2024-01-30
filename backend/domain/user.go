@@ -40,6 +40,7 @@ type (
 		GetUserByEmail(email string) (*User, error)
 		GetUserByID(ID uint) (*User, error)
 		GetUserInfoByID(ID uint) (*User, error)
+		IsUserExist(email string) bool
 	}
 )
 
