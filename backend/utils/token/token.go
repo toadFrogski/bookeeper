@@ -1,8 +1,8 @@
 package token
 
 import (
+	"bookeeper/domain"
 	"fmt"
-	"gg/domain"
 	"os"
 	"strconv"
 	"strings"

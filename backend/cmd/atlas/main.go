@@ -1,8 +1,8 @@
 package main
 
 import (
+	"bookeeper/domain"
 	"fmt"
-	"gg/domain"
 	"io"
 	"os"
 

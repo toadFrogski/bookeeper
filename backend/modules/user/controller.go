@@ -1,10 +1,10 @@
 package user
 
 import (
-	"gg/domain"
-	"gg/utils/constants"
-	_ "gg/utils/dto"
-	"gg/utils/panic"
+	"bookeeper/domain"
+	"bookeeper/utils/constants"
+	_ "bookeeper/utils/dto"
+	"bookeeper/utils/panic"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

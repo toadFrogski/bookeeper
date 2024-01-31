@@ -1,8 +1,8 @@
 package user
 
 import (
-	"gg/domain"
-	"gg/utils/dto"
+	"bookeeper/domain"
+	"bookeeper/utils/dto"
 )
 
 type (

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"gg/database"
-	routes "gg/handlers"
-	"gg/middlewares"
+	"bookeeper/database"
+	routes "bookeeper/handlers"
+	"bookeeper/middlewares"
 	"os"
 
 	"github.com/gin-gonic/gin"

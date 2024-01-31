@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"gg/utils/constants"
+	"bookeeper/utils/constants"
 	"html"
 	"strings"
 

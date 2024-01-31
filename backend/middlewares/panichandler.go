@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"gg/utils/panic"
+	"bookeeper/utils/panic"
 
 	"github.com/gin-gonic/gin"
 )

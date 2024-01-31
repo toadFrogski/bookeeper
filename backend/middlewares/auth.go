@@ -1,10 +1,10 @@
 package middlewares
 
 import (
-	"gg/database"
-	"gg/domain"
-	"gg/utils/constants"
-	"gg/utils/token"
+	"bookeeper/database"
+	"bookeeper/domain"
+	"bookeeper/utils/constants"
+	"bookeeper/utils/token"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

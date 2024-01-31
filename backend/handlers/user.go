@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"gg/database"
-	"gg/middlewares"
-	"gg/modules/user"
-	"gg/utils/constants"
+	"bookeeper/database"
+	"bookeeper/middlewares"
+	"bookeeper/modules/user"
+	"bookeeper/utils/constants"
 
 	"github.com/gin-gonic/gin"
 )

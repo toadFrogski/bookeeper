@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"gg/database"
-	"gg/modules/user"
+	"bookeeper/database"
+	"bookeeper/modules/user"
 
 	"github.com/gin-gonic/gin"
 )

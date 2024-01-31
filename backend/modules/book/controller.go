@@ -1,9 +1,9 @@
 package book
 
 import (
-	"gg/domain"
-	_ "gg/utils/dto"
-	_ "gg/utils/paginator"
+	"bookeeper/domain"
+	_ "bookeeper/utils/dto"
+	_ "bookeeper/utils/paginator"
 
 	"github.com/gin-gonic/gin"
 )

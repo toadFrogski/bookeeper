@@ -1,6 +1,6 @@
 package domain
 
-import "gg/utils/constants"
+import "bookeeper/utils/constants"
 
 type (
 	Role struct {

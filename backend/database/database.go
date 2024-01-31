@@ -1,7 +1,7 @@
 package database
 
 import (
-	config "gg/conf"
+	config "bookeeper/conf"
 	"log"
 
 	"gorm.io/driver/postgres"

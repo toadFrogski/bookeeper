@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"gg/utils/paginator"
+	"bookeeper/utils/paginator"
 
 	"github.com/gin-gonic/gin"
 )

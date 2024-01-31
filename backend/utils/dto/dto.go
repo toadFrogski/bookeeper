@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"gg/utils/constants"
+	"bookeeper/utils/constants"
 )
 
 type (

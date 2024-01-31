@@ -1,4 +1,4 @@
-module gg
+module bookeeper
 
 go 1.21
 

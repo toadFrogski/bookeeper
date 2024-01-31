@@ -1,11 +1,11 @@
 package user
 
 import (
-	"gg/domain"
-	"gg/utils/constants"
-	"gg/utils/dto"
-	"gg/utils/panic"
-	"gg/utils/token"
+	"bookeeper/domain"
+	"bookeeper/utils/constants"
+	"bookeeper/utils/dto"
+	"bookeeper/utils/panic"
+	"bookeeper/utils/token"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

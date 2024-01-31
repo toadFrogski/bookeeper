@@ -1,9 +1,9 @@
 package book
 
 import (
-	"gg/domain"
-	"gg/utils/dto"
-	"gg/utils/paginator"
+	"bookeeper/domain"
+	"bookeeper/utils/dto"
+	"bookeeper/utils/paginator"
 	"mime/multipart"
 )
 

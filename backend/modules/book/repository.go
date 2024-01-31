@@ -1,8 +1,8 @@
 package book
 
 import (
-	"gg/domain"
-	"gg/utils/paginator"
+	"bookeeper/domain"
+	"bookeeper/utils/paginator"
 
 	"gorm.io/gorm"
 )

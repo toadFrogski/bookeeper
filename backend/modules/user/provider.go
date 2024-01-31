@@ -1,7 +1,7 @@
 package user
 
 import (
-	"gg/domain"
+	"bookeeper/domain"
 	"sync"
 
 	"github.com/google/wire"

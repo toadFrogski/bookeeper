@@ -1,7 +1,7 @@
 package user
 
 import (
-	"gg/domain"
+	"bookeeper/domain"
 
 	"gorm.io/gorm"
 )
