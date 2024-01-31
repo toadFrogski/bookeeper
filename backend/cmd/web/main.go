@@ -11,7 +11,7 @@ import (
 
 const SOCKET_PATH = "/var/run/www.sock"
 
-// @title GG backend API
+// @title Bookeeper backend API
 // @version 1.0
 //
 // @BasePath /v1

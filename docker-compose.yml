@@ -44,13 +44,7 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
 
-  autodoc:
+  generate_back_api:
     image: swag/autodoc
     build:
       context: ./docker/autodoc
-    depends_on:
-      - backend
-    volumes:
-      - ./backend:/app
-      - ./docs:/docs
-    command: init -g ./cmd/web/main.go -o /docs -d ./ --parseDependency -ot yaml --parseGoList=false

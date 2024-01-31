@@ -16,6 +16,7 @@ type UserController struct {
 
 // Register godoc
 // @Summary Register new  user
+// @Tags auth
 // @Accept  json
 // @Produce json
 // @Param   register body RegisterUserForm true "Register form"
@@ -29,6 +30,7 @@ func (uc UserController) Register(c *gin.Context) {
 
 // Login godoc
 // @Summary Login user
+// @Tags auth
 // @Accept  json
 // @Produce json
 // @Param   login body LoginUserForm true "Login form"
@@ -42,6 +44,7 @@ func (uc UserController) Login(c *gin.Context) {
 
 // GetUserInfo godoc
 // @Summary Get user info
+// @Tags user
 // @Produce json
 // @Success 200 {object} UserResponse
 // @Failure 400 {object} AnyResponse
@@ -59,6 +62,7 @@ func (uc UserController) GetUserInfo(c *gin.Context) {
 
 // GetUserInfoByID godoc
 // @Summary Get user info by ID
+// @Tags user
 // @Produce json
 // @Param user_id path int true "User ID"
 // @Success 200 {object} UserResponse

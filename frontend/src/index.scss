@@ -1,0 +1,69 @@
+@import "./scss/variables.scss";
+
+:root[data-theme="light"] {
+  --background-color: #{$color-base-light};
+  --main-color: #{$color-main-light};
+  --second-color: #{$color-second-light};
+  --third-color: #{$color-third-light};
+  --text-color: #{$color-text-light};
+}
+
+:root[data-theme="dark"] {
+  --background-color: #{$color-base-dark};
+  --main-color: #{$color-main-dark};
+  --second-color: #{$color-second-dark};
+  --third-color: #{$color-third-dark};
+  --text-color: #{$color-text-dark};
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--background-color);
+}
+
+$indentationRules: 100, 85, 65, 48, 46, 40, 36, 32, 24, 20, 12;
+$directions: (
+  "t": "top",
+  "b": "bottom",
+  "r": "right",
+  "l": "left",
+);
+
+@each $desktopIndent in $indentationRules {
+  @each $attr, $direction in $directions {
+    .m#{$attr}-#{$desktopIndent} {
+      margin-#{$direction}: #{$desktopIndent}px;
+    }
+
+    .p#{$attr}-#{$desktopIndent} {
+      padding-#{$direction}: #{$desktopIndent}px;
+    }
+  }
+
+  .m-#{$desktopIndent} {
+    margin: #{$desktopIndent}px;
+  }
+
+  .p-#{$desktopIndent} {
+    padding: #{$desktopIndent}px;
+  }
+}
+
+$fontSizes: 12 12, 14 24, 16 24, 18 24, 24 36, 36 36;
+@each $fontSize, $lineHeight in $fontSizes {
+  .fs-#{$fontSize}-#{$lineHeight} {
+    font-size: #{$fontSize}px;
+    line-height: #{$lineHeight}px;
+  }
+}
+
+$fontWeights: 400, 500, 600, 700;
+@each $fontWeight in $fontWeights {
+  .fw-#{$fontWeight} {
+    font-weight: $fontWeight;
+  }
+}

@@ -15,6 +15,7 @@ type BookController struct {
 // GetBookList godoc
 //
 // @Summary Get book list
+// @Tags book
 // @Accept json
 // @Produce json
 // @Param page query int false "Page number"
@@ -30,6 +31,7 @@ func (bc BookController) GetBookList(c *gin.Context) {
 // SaveBook godoc
 //
 // @Summary Save book
+// @Tags book
 // @Accept mpfd
 // @Produce json
 // @Param image formData file true "Image to be uploaded"
@@ -44,6 +46,7 @@ func (bc BookController) SaveBook(c *gin.Context) {
 
 // GetBook godoc
 // @Summary Get book by ID
+// @Tags book
 // @Param book_id path int true "Book ID"
 // @Success 200 {object} BookResponse
 // @Failude 400 {object} AnyResponse
@@ -55,6 +58,7 @@ func (bc BookController) GetBook(c *gin.Context) {
 
 // DeleteBook godoc
 // @Summmary Delete book by ID
+// @Tags book
 // @Param book_id path int true "Book ID"
 // @Success 200 {object} AnyResponse
 // @Failure 400 {object} AnyResponse
