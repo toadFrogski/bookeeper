@@ -16,7 +16,7 @@ services:
       - backend_sock:/var/run/backend
 
   backend:
-    image: gg/backend
+    image: bookeeper/backend
     build:
       context: ./backend
       dockerfile: ../docker/backend/Dockerfile

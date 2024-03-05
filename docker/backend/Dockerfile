@@ -1,14 +1,16 @@
 FROM golang:1.21.3-bookworm as builder
 WORKDIR /build
+COPY . .
 
 RUN apt-get update && apt-get install -y git
 
 # Fetch dependencies
 COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod download && \
+    go install github.com/google/wire/cmd/wire@latest && \
+    wire gen ./modules/*
 
 # Build
-COPY . .
 WORKDIR /build/cmd/web
 RUN CGO_ENABLED=0 go build -o app-binary .
 
