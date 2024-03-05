@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Home, Login } from "./pages";
 import getTheme from "./assets/theme";
 import { LoginProvider } from "../contexts/login";
+import "./index.scss";
 
 const App: FC = () => {
   const { theme } = useContext(SessionContext);
