@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"bookeeper/database"
-	"bookeeper/middlewares"
+	m "bookeeper/middlewares"
 	"bookeeper/modules/book"
-	"bookeeper/utils/constants"
+	c "bookeeper/utils/constants"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,10 +17,10 @@ func GetBooksRoutes(r gin.IRouter) gin.IRouter {
 		bookRouter.GET("/", bookAPI.GetBookList)
 		bookRouter.GET(":bookID", bookAPI.GetBook)
 		bookRouter.POST("save",
-			middlewares.RoleAccessMiddleware([]constants.Role{constants.Admin, constants.User}),
+			m.RoleAccessMiddleware([]c.Role{c.Admin, c.User}),
 			bookAPI.SaveBook)
 		bookRouter.DELETE(":bookID",
-			middlewares.RoleAccessMiddleware([]constants.Role{constants.Admin, constants.User}),
+			m.RoleAccessMiddleware([]c.Role{c.Admin, c.User}),
 			bookAPI.DeleteBookByID)
 	}
 

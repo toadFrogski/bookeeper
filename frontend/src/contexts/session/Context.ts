@@ -1,18 +1,15 @@
 import { createContext } from "react";
 
-export enum Theme {
-  dark = "dark",
-  light = "light",
-}
+export type Theme = "dark" | "light";
 
 type Props = {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
+  switchTheme: () => void;
 };
 
 const initialState: Props = {
-  theme: Theme.light,
-  setTheme: () => {},
+  theme: "light",
+  switchTheme: () => {},
 };
 
 export default createContext<Props>(initialState);

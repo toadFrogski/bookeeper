@@ -1,21 +1,3 @@
-@import "./scss/variables.scss";
-
-:root[data-theme="light"] {
-  --background-color: #{$color-base-light};
-  --main-color: #{$color-main-light};
-  --second-color: #{$color-second-light};
-  --third-color: #{$color-third-light};
-  --text-color: #{$color-text-light};
-}
-
-:root[data-theme="dark"] {
-  --background-color: #{$color-base-dark};
-  --main-color: #{$color-main-dark};
-  --second-color: #{$color-second-dark};
-  --third-color: #{$color-third-dark};
-  --text-color: #{$color-text-dark};
-}
-
 * {
   margin: 0;
   padding: 0;

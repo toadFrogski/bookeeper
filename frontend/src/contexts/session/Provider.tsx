@@ -3,12 +3,12 @@ import Context, { Theme } from "./Context";
 
 const getTheme = () => {
   const theme = `${window?.localStorage?.getItem("theme")}`;
-  if (theme in Theme) return theme as Theme;
+  if (theme === "light" || theme === "dark") return theme as Theme;
 
   const userMedia = window.matchMedia("(prefers-color-scheme: light)");
-  if (userMedia.matches) return Theme.light;
+  if (userMedia.matches) return "light";
 
-  return Theme.dark;
+  return "dark";
 };
 
 export type Props = PropsWithChildren;
@@ -16,12 +16,16 @@ export type Props = PropsWithChildren;
 const Provider: FC<Props> = ({ children }: Props) => {
   const [theme, setTheme] = useState<Theme>(getTheme);
 
+  const switchTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
+  };
+
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  return <Context.Provider value={{ theme, setTheme }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ theme, switchTheme }}>{children}</Context.Provider>;
 };
 
 export default Provider;
