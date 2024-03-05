@@ -10,8 +10,8 @@ import (
 func GetAuthRoutes(r gin.IRouter) gin.IRouter {
 	userAPI := user.Wire(database.DB)
 
-	r.POST("register", userAPI.Register)
-	r.POST("login", userAPI.Login)
+	r.POST("/register", userAPI.Register)
+	r.POST("/login", userAPI.Login)
 
 	return r
 }

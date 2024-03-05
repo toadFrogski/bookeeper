@@ -48,6 +48,7 @@ func (uc UserController) Login(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} UserResponse
 // @Failure 400 {object} AnyResponse
+// @Failure 401 {object} AnyResponse
 // @Failure 500 {object} AnyResponse
 // @Router /profile [get]
 func (uc UserController) GetUserInfo(c *gin.Context) {
@@ -67,6 +68,7 @@ func (uc UserController) GetUserInfo(c *gin.Context) {
 // @Param user_id path int true "User ID"
 // @Success 200 {object} UserResponse
 // @Failure 400 {object} AnyResponse
+// @Failure 401 {object} AnyResponse
 // @Failure 500 {object} AnyResponse
 // @Router /profile/{user_id} [get]
 func (uc UserController) GetUserInfoByID(c *gin.Context) {

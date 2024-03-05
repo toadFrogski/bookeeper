@@ -4,12 +4,9 @@ import (
 	"bookeeper/database"
 	routes "bookeeper/handlers"
 	"bookeeper/middlewares"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
-
-const SOCKET_PATH = "/var/run/www.sock"
 
 // @title Bookeeper backend API
 // @version 1.0
@@ -22,8 +19,7 @@ func main() {
 	initMiddlewares(r)
 	initRoutes(r)
 
-	os.Remove(SOCKET_PATH)
-	r.RunUnix(SOCKET_PATH)
+	r.Run(":8081")
 }
 
 func initRoutes(r *gin.Engine) {

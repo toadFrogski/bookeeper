@@ -58,11 +58,11 @@ func (us UserService) Login(c *gin.Context) {
 
 	user, err := us.UserRepo.GetUserByEmail(loginUserForm.Email)
 	if err != nil {
-		panic.PanicException(constants.InvalidRequest)
+		panic.PanicException(constants.UserNotFound)
 	}
 
 	if err := user.ValidatePassword(loginUserForm.Password); err != nil {
-		panic.PanicException(constants.InvalidRequest)
+		panic.PanicException(constants.IncorrectPassword)
 	}
 
 	accessToken, err := token.GenerateToken(user)

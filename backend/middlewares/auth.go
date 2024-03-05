@@ -17,7 +17,7 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 		var claims *jwt.MapClaims
 
 		anonUser = &domain.User{
-			Roles: []*domain.Role{&domain.Role{Name: constants.Anonymous}},
+			Roles: []*domain.Role{{Name: constants.Anonymous}},
 		}
 
 		claims, err := token.ExtractTokenClaims(c)
