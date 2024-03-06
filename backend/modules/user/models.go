@@ -21,6 +21,16 @@ type (
 		Token string `json:"token"`
 	} // @name Auth
 
+	ValidationError struct {
+		Type        string
+		Description string
+	} //@name ValidationError
+
+	NamedValidationErrors struct {
+		Name   string
+		Errors []ValidationError
+	} // @name NamedValidationErrors
+
 	AuthResponse = dto.Response[Auth]        // @name AuthResponse
 	UserResponse = dto.Response[domain.User] // @name UserResponse
 )

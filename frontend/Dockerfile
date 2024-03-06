@@ -6,7 +6,5 @@ COPY . .
 
 RUN yarn install
 
-EXPOSE 80
-
 ENTRYPOINT [ "yarn" ]
-CMD [ "dev", "--port", "80" ]
+CMD [ "dev" ]

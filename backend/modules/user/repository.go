@@ -18,9 +18,9 @@ func (ur UserRepository) CreateUser(u *domain.User) error {
 	return nil
 }
 
-func (ur UserRepository) GetUserByEmail(email string) (*domain.User, error) {
+func (ur UserRepository) GetUserByAttribute(attr string, value string) (*domain.User, error) {
 	var user *domain.User
-	if err := ur.db.Preload("Roles").Where("email = ? ", email).First(&user).Error; err != nil {
+	if err := ur.db.Preload("Roles").Where("? = ? ", attr, value).First(&user).Error; err != nil {
 		return nil, err
 	}
 
@@ -48,9 +48,9 @@ func (ur UserRepository) GetUserInfoByID(ID uint) (*domain.User, error) {
 	return user, nil
 }
 
-func (ur UserRepository) IsUserExist(email string) bool {
+func (ur UserRepository) IsUserAttributeExist(attr string, value string) bool {
 	var userExist bool
-	ur.db.Model(domain.User{}).Select("count(*) > 0").Where("email = ?", email).Find(&userExist)
+	ur.db.Model(domain.User{}).Select("count(*) > 0").Where("? = ?", attr, value).Find(&userExist)
 
 	return userExist
 }

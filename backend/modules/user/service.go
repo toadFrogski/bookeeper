@@ -7,6 +7,7 @@ import (
 	"bookeeper/utils/panic"
 	"bookeeper/utils/token"
 	"net/http"
+	"net/mail"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,9 +24,7 @@ func (us UserService) Register(c *gin.Context) {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	if exist := us.UserRepo.IsUserExist(RegisterUserForm.Email); exist {
-		panic.PanicException(constants.RegistredEmail)
-	}
+	us.validateRegister(c, RegisterUserForm)
 
 	user = &domain.User{
 		Email:    RegisterUserForm.Email,
@@ -56,14 +55,7 @@ func (us UserService) Login(c *gin.Context) {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	user, err := us.UserRepo.GetUserByEmail(loginUserForm.Email)
-	if err != nil {
-		panic.PanicException(constants.UserNotFound)
-	}
-
-	if err := user.ValidatePassword(loginUserForm.Password); err != nil {
-		panic.PanicException(constants.IncorrectPassword)
-	}
+	us.validateLogin(c, loginUserForm)
 
 	accessToken, err := token.GenerateToken(user)
 	if err != nil {
@@ -85,4 +77,45 @@ func (us UserService) GetUserInfo(c *gin.Context, userID uint) {
 	}
 
 	c.JSON(http.StatusOK, dto.BuildResponse[domain.User](constants.Success, *user))
+}
+
+func (us UserService) validateRegister(c *gin.Context, registerForm *RegisterUserForm) {
+	var emailErrors *NamedValidationErrors
+
+	emailErrors = &NamedValidationErrors{Name: "email"}
+	if _, err := mail.ParseAddress(registerForm.Email); err != nil {
+		emailErrors.Errors = append(
+			emailErrors.Errors,
+			ValidationError{Type: "invalid_email", Description: "Email has invalid format"},
+		)
+	}
+
+	if len(emailErrors.Errors) != 0 {
+		c.JSON(http.StatusBadRequest, dto.BuildResponse[NamedValidationErrors](constants.InvalidRequest, *emailErrors))
+	}
+
+	if exist := us.UserRepo.IsUserAttributeExist("email", registerForm.Email); exist {
+		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.RegisteredEmail, nil))
+	}
+
+	if exist := us.UserRepo.IsUserAttributeExist("username", registerForm.Email); exist {
+		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.RegisteredUsername, nil))
+	}
+
+}
+
+func (us UserService) validateLogin(c *gin.Context, loginForm *LoginUserForm) {
+	var user *domain.User
+
+	user, err := us.UserRepo.GetUserByAttribute("email", loginForm.Email)
+	if err != nil {
+		user, err = us.UserRepo.GetUserByAttribute("username", loginForm.Email)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.UserNotFound, nil))
+		}
+	}
+
+	if err := user.ValidatePassword(loginForm.Password); err != nil {
+		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.IncorrectPassword, nil))
+	}
 }

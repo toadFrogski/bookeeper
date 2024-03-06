@@ -13,17 +13,25 @@ const (
 	PermissionDenied
 
 	// User statuses
-	RegistredEmail
+	RegisteredEmail
 	UserNotFound
 	IncorrectPassword
+	RegisteredUsername
+
+	// API statuses
+	ValidationError
 )
 
 func (r ResponseStatus) GetResponseStatus() int {
 	return [...]int{
 		// Common status codes
 		1000, 1001, 1002, 1003, 1004, 1005, 1006,
+
 		// User status codes
-		2001, 2002, 2003,
+		2001, 2002, 2003, 2004,
+
+		// API status messages,
+		3001,
 	}[r]
 }
 
@@ -34,6 +42,9 @@ func (r ResponseStatus) GetResponseMessage() string {
 		"INTERNAL_ERROR", "UNKNOWN_ERROR", "PERMISSION_DENIED",
 
 		// User status messages
-		"REGISTRED_EMAIL","USER_NOT_FOUND","INCORRECT_PASSWORD",
+		"REGISTERED_EMAIL", "USER_NOT_FOUND", "INCORRECT_PASSWORD", "REGISTERED_EMAIL",
+
+		// API status messages
+		"VALIDATION_ERROR",
 	}[r]
 }

@@ -15,8 +15,7 @@ WORKDIR /build/cmd/web
 RUN CGO_ENABLED=0 go build -o app-binary .
 
 # Create final image
-FROM alpine
+FROM alpine as final
 WORKDIR /app
 COPY --from=builder /build/cmd/web/app-binary .
-EXPOSE 80
 ENTRYPOINT ["/app/app-binary"]

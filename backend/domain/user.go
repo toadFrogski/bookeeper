@@ -13,7 +13,7 @@ import (
 type (
 	User struct {
 		ID          uint    `gorm:"primarykey"`
-		Username    string  `gorm:"column:username" json:"username"`
+		Username    string  `gorm:"column:username;uniqueIndex" json:"username"`
 		Password    string  `gorm:"password;" json:"-"`
 		Email       string  `gorm:"column:email;uniqueIndex" json:"email"`
 		Description string  `gorm:"column:description; text" json:"description"`
@@ -37,10 +37,10 @@ type (
 
 	IUserRepository interface {
 		CreateUser(u *User) error
-		GetUserByEmail(email string) (*User, error)
+		GetUserByAttribute(attr string, value string) (*User, error)
 		GetUserByID(ID uint) (*User, error)
 		GetUserInfoByID(ID uint) (*User, error)
-		IsUserExist(email string) bool
+		IsUserAttributeExist(attr string, value string) bool
 	}
 )
 
