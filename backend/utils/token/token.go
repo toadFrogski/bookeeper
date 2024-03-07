@@ -12,19 +12,31 @@ import (
 	jwt "github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateToken(user *domain.User) (string, error) {
-	token_lifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
+type Token struct {
+	Token   string
+	Expires int64
+}
+
+func GenerateToken(user *domain.User) (*Token, error) {
+	var tokenLifespan int
+	var tokenExp int64
+	var token *jwt.Token
+	var tokenString string
+
+	tokenLifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	tokenExp = time.Now().Add(time.Hour * time.Duration(tokenLifespan)).Unix()
+	token = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"authorized": true,
 		"sub":        strconv.Itoa(int(user.ID)),
-		"exp":        time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix(),
+		"exp":        tokenExp,
 	})
+	tokenString, err = token.SignedString([]byte(os.Getenv("API_SECRET")))
 
-	return token.SignedString([]byte(os.Getenv("API_SECRET")))
+	return &Token{Token: tokenString, Expires: tokenExp}, err
 }
 
 func ExtractToken(c *gin.Context) string {

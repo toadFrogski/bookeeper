@@ -1,22 +1,9 @@
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  Link as MuiLink,
-  OutlinedInput,
-  Paper,
-} from "@mui/material";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Box, Button, Container, FormControl, InputLabel, OutlinedInput, Paper } from "@mui/material";
 import { FC, MouseEventHandler, useContext, useReducer, useState } from "react";
 import styles from "./styles.module.scss";
-import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/api";
-import { PasswordLine } from "../../components";
+import { LoginContext } from "../../../contexts/login";
+import { Password, PasswordLine } from "../../components";
 
 const atLeastMinimumLength = (password: string) => new RegExp(/(?=.{8,})/).test(password);
 const atLeastOneUppercaseLetter = (password: string) => new RegExp(/(?=.*?[A-Z])/).test(password);
@@ -42,23 +29,25 @@ const initialStates = {
   },
 };
 
-const Login: FC = () => {
+const SignUp: FC = () => {
   const { authApi } = useContext(ApiContext);
+  const { setToken } = useContext(LoginContext);
 
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // Styled states
-  const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordStatus, setPasswordStatus] = useState<PasswordStatus>(initialStates.passwordStatus);
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     authApi
-      .loginPost({ email: email, password: password })
+      .registerPost({ email: email, password: password, username: username })
       .then((res) => {
-        console.log(res.data);
+        if (res.data.data) {
+          setToken(res.data.data);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -68,31 +57,31 @@ const Login: FC = () => {
   const validatePassword = (password: string) => {
     let strength: number = 0;
     if (atLeastMinimumLength(password)) {
-      strength += 16;
+      strength += 35;
       setPasswordStatus((status) => ({ ...status, minimumLength: false }));
     } else {
       setPasswordStatus((status) => ({ ...status, minimumLength: true }));
     }
     if (atLeastOneLowercaseLetter(password)) {
-      strength += 16;
+      strength += 5;
       setPasswordStatus((status) => ({ ...status, oneLowercaseLetter: false }));
     } else {
       setPasswordStatus((status) => ({ ...status, oneLowercaseLetter: true }));
     }
     if (atLeastOneUppercaseLetter(password)) {
-      strength += 16;
+      strength += 5;
       setPasswordStatus((status) => ({ ...status, oneUppercaseLetter: false }));
     } else {
       setPasswordStatus((status) => ({ ...status, oneUppercaseLetter: true }));
     }
     if (atLeastOneNumber(password)) {
-      strength += 16;
+      strength += 15;
       setPasswordStatus((status) => ({ ...status, oneNumber: false }));
     } else {
       setPasswordStatus((status) => ({ ...status, oneNumber: true }));
     }
     if (atLeastOneSpecialChar(password)) {
-      strength += 16;
+      strength += 20;
       setPasswordStatus((status) => ({ ...status, oneSpecialChar: false }));
     } else {
       setPasswordStatus((status) => ({ ...status, oneSpecialChar: true }));
@@ -103,53 +92,44 @@ const Login: FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box component="section" className={styles.loginForm}>
+      <Box component="section" className={styles.registerForm}>
         <Paper sx={{ padding: 5 }}>
           <FormControl sx={{ width: "100%" }}>
-            <InputLabel htmlFor="login-email">Email or username</InputLabel>
+            <InputLabel htmlFor="form-element-email">Email</InputLabel>
             <OutlinedInput
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
-              id="login-email"
-              label="Email or username"
+              id="form-element-email"
+              label="Email"
             />
           </FormControl>
-          <FormControl sx={{ width: "100%", mt: 3 }} variant="outlined">
-            <InputLabel htmlFor="login-password">Password</InputLabel>
+          <FormControl sx={{ width: "100%", mt: 2 }}>
+            <InputLabel htmlFor="form-element-username">Username</InputLabel>
             <OutlinedInput
-              value={password}
+              value={username}
               onChange={(e) => {
-                setPassword(e.target.value);
-                validatePassword(e.target.value);
+                setUsername(e.target.value);
               }}
-              id="login-password"
-              type={showPassword ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onMouseDown={() => setShowPassword(true)}
-                    onMouseUp={() => setShowPassword(false)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
+              id="form-element-username"
+              label="Username"
             />
           </FormControl>
-          {password.length !== 0 && <PasswordLine sx={{ mt: 2 }} strength={passwordStrength} />}
-          <MuiLink sx={{ mt: 2, display: "block" }} component={Link} to="/">
-            Forgot password
-          </MuiLink>
+          <Password
+            sx={{ width: "100%", mt: 2 }}
+            password={password}
+            setPassword={(password) => {
+              setPassword(password);
+              validatePassword(password)
+            }}
+          />
+          <PasswordLine sx={{ mt: 1 }} strength={passwordStrength} />
           <Button
             sx={{ width: "100%", mt: 3, minHeight: "56px" }}
             variant="contained"
             onClick={handleSubmit}
-            disabled={email.length === 0 || password.length == 0}
+            disabled={email.length === 0 || passwordStrength < 50}
           >
             Submit
           </Button>
@@ -159,4 +139,4 @@ const Login: FC = () => {
   );
 };
 
-export default Login;
+export default SignUp;

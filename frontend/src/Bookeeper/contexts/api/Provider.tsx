@@ -7,8 +7,16 @@ import { LoginContext } from "../../../contexts/login";
 type Props = PropsWithChildren;
 
 const Provider: FC<Props> = ({ children }) => {
-  const client = useRef(axios.create());
-  const { logout } = useContext(LoginContext);
+  const { token, logout } = useContext(LoginContext);
+
+  const client = useRef(
+    axios.create({
+      headers: {
+        Authorization: `Bearer ${token.token}`,
+      },
+    })
+  );
+
 
   const authApi = useRef(new AuthApi(undefined, undefined, client.current));
   const userApi = useRef(new UserApi(undefined, undefined, client.current));

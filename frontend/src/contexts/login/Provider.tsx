@@ -1,34 +1,53 @@
-import { FC, PropsWithChildren, useEffect, useRef, useState } from "react";
+import { FC, PropsWithChildren, ReactNode, useCallback, useEffect, useState } from "react";
 import Context from "./Context";
+import { Auth } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
-type Props = PropsWithChildren;
+type Props = PropsWithChildren & {
+  fallback?: ReactNode;
+};
 
-const Provider: FC<Props> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const Provider: FC<Props> = ({ children, fallback }) => {
+  const [token, setToken] = useState<Auth>({ token: "" });
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
-  const logout = () => {
-    setIsAuthenticated(false);
+  const logout = useCallback(() => {
+    setToken({ token: "" });
+    localStorage.removeItem("accessToken");
+    navigate("/")
+  }, []);
+
+  const setSessionToken = (token: Auth) => {
+    setToken(token);
+    localStorage.setItem("accessToken", JSON.stringify(token));
   };
 
-  const timer = useRef<number>();
-
   useEffect(() => {
-    timer.current = setTimeout(() => {
-      setIsAuthenticated(true);
-      console.log(123);
-    }, 2000);
-
-    return () => clearTimeout(timer.current);
-  }, [isAuthenticated]);
+    (async () => {
+      const token = localStorage.getItem("accessToken");
+      if (token !== null) {
+        const tokenObj = JSON.parse(token) as Auth;
+        setToken(tokenObj);
+        // if (Math.round(Date.now() / 1000) < tokenObj.expires) {
+        //   AuthApiFactory().refresh(tokenObj.token)
+        // }
+      } else {
+        logout();
+      }
+      setIsLoading(false);
+    })();
+  }, [logout]);
 
   return (
     <Context.Provider
       value={{
-        isAuthenticated: isAuthenticated,
+        token: token,
+        setToken: setSessionToken,
         logout: logout,
       }}
     >
-      {children}
+      {isLoading ? fallback : children}
     </Context.Provider>
   );
 };

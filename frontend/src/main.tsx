@@ -1,14 +1,12 @@
-import React, { lazy } from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
+import App from "./App";
 import "./index.scss";
-import { SessionProvider } from "./contexts/session";
-
-const Bookeeper = lazy(() => import("./Bookeeper/App"));
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <SessionProvider>
-      <Bookeeper />
-    </SessionProvider>
+    <Suspense>
+      <App />
+    </Suspense>
   </React.StrictMode>
 );

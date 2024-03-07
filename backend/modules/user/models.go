@@ -18,7 +18,8 @@ type (
 	} // @name LoginUserForm
 
 	Auth struct {
-		Token string `json:"token"`
+		Token   string `json:"token"`
+		Expires int64  `json:"expires"`
 	} // @name Auth
 
 	ValidationError struct {

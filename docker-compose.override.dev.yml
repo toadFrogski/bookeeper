@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  nginx:
+    volumes:
+      - ./docker/nginx/conf.dev.d:/etc/nginx/conf.d:ro
+    ports:
+      - "8085:80"
+
+  backend:
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=bookeper
+      - DB_PASSWORD=bookeper
+      - DB_DATABASE=bookeper
+      - MEDIA_DIRECTORY="../media"
+      - TOKEN_HOUR_LIFESPAN=12
+      - API_SECRET=changeme
+
+  frontend:
+    image: bookeeper/frontend
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    volumes:
+      - ./frontend/public:/frontend/public
+      - ./frontend/src:/frontend/src
+
+  db:
+    environment:
+      - POSTGRES_PASSWORD=bookeper
+      - POSTGRES_USER=bookeper
+      - POSTGRES_DB=bookeper
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "6543:5432"

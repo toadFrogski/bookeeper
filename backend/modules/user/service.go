@@ -43,7 +43,7 @@ func (us UserService) Register(c *gin.Context) {
 
 	c.JSON(
 		http.StatusCreated,
-		dto.BuildResponse[Auth](constants.Success, Auth{Token: accessToken}),
+		dto.BuildResponse[Auth](constants.Success, Auth(*accessToken)),
 	)
 }
 
@@ -64,7 +64,7 @@ func (us UserService) Login(c *gin.Context) {
 
 	c.JSON(
 		http.StatusOK,
-		dto.BuildResponse[Auth](constants.Success, Auth{Token: accessToken}),
+		dto.BuildResponse[Auth](constants.Success, Auth(*accessToken)),
 	)
 }
 
@@ -92,14 +92,17 @@ func (us UserService) validateRegister(c *gin.Context, registerForm *RegisterUse
 
 	if len(emailErrors.Errors) != 0 {
 		c.JSON(http.StatusBadRequest, dto.BuildResponse[NamedValidationErrors](constants.InvalidRequest, *emailErrors))
+		c.Abort()
 	}
 
 	if exist := us.UserRepo.IsUserAttributeExist("email", registerForm.Email); exist {
 		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.RegisteredEmail, nil))
+		c.Abort()
 	}
 
 	if exist := us.UserRepo.IsUserAttributeExist("username", registerForm.Email); exist {
 		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.RegisteredUsername, nil))
+		c.Abort()
 	}
 
 }
@@ -112,10 +115,12 @@ func (us UserService) validateLogin(c *gin.Context, loginForm *LoginUserForm) {
 		user, err = us.UserRepo.GetUserByAttribute("username", loginForm.Email)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.UserNotFound, nil))
+			c.Abort()
 		}
 	}
 
 	if err := user.ValidatePassword(loginForm.Password); err != nil {
 		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.IncorrectPassword, nil))
+		c.Abort()
 	}
 }

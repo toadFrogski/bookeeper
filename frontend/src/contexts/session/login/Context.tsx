@@ -3,7 +3,7 @@ import { Auth } from "../../services/api";
 
 type Props = {
   token: Auth;
-  setToken: (token: Auth) => void;
+  setToken: (token: string) => void;
   logout: () => void;
 };
 

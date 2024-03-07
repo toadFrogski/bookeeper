@@ -1,7 +1,9 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
+import { LoginContext } from "../../../contexts/login";
 
 const Home: FC = () => {
-  return <span></span>;
+  const { logout } = useContext(LoginContext);
+  return <span onClick={() => logout()}> Logout</span>;
 };
 
 export default Home;

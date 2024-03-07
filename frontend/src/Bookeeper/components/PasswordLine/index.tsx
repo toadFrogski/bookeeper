@@ -24,7 +24,7 @@ const PasswordLine: FC<Props> = ({ strength, ...props }) => {
   return (
     <Box {...props} display="flex" alignItems="center" justifyContent="center" gap="5px">
       {colors.map((color, index) => (
-        <Box key={`password-color-${index}`} flex={1} height="5px" bgcolor={color}></Box>
+        <Box key={`password-color-${index}`} flex={1} height="5px" bgcolor={color} borderRadius="4px"></Box>
       ))}
     </Box>
   );
