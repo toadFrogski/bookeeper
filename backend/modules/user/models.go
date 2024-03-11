@@ -23,15 +23,16 @@ type (
 	} // @name Auth
 
 	ValidationError struct {
-		Type        string
-		Description string
+		Type        string `json:"type"`
+		Description string `json:"description"`
 	} //@name ValidationError
 
 	NamedValidationErrors struct {
-		Name   string
-		Errors []ValidationError
+		Name   string            `json:"name"`
+		Errors []ValidationError `json:"errors"`
 	} // @name NamedValidationErrors
 
-	AuthResponse = dto.Response[Auth]        // @name AuthResponse
-	UserResponse = dto.Response[domain.User] // @name UserResponse
+	AuthResponse                  = dto.Response[Auth]                  // @name AuthResponse
+	UserResponse                  = dto.Response[domain.User]           // @name UserResponse
+	NamedValidationErrorsResponse = dto.Response[NamedValidationErrors] // @name NamedValidationErrorsResponse
 )

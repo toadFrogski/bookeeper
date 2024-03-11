@@ -24,7 +24,9 @@ func (us UserService) Register(c *gin.Context) {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	us.validateRegister(c, RegisterUserForm)
+	if ok := us.validateRegister(c, RegisterUserForm); !ok {
+		return
+	}
 
 	user = &domain.User{
 		Email:    RegisterUserForm.Email,
@@ -55,7 +57,9 @@ func (us UserService) Login(c *gin.Context) {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	us.validateLogin(c, loginUserForm)
+	if ok := us.validateLogin(c, loginUserForm); !ok {
+		return
+	}
 
 	accessToken, err := token.GenerateToken(user)
 	if err != nil {
@@ -79,10 +83,12 @@ func (us UserService) GetUserInfo(c *gin.Context, userID uint) {
 	c.JSON(http.StatusOK, dto.BuildResponse[domain.User](constants.Success, *user))
 }
 
-func (us UserService) validateRegister(c *gin.Context, registerForm *RegisterUserForm) {
-	var emailErrors *NamedValidationErrors
+func (us UserService) validateRegister(c *gin.Context, registerForm *RegisterUserForm) bool {
+	var emailErrors, usernameErrors *NamedValidationErrors
 
 	emailErrors = &NamedValidationErrors{Name: "email"}
+	usernameErrors = &NamedValidationErrors{Name: "username"}
+
 	if _, err := mail.ParseAddress(registerForm.Email); err != nil {
 		emailErrors.Errors = append(
 			emailErrors.Errors,
@@ -93,21 +99,33 @@ func (us UserService) validateRegister(c *gin.Context, registerForm *RegisterUse
 	if len(emailErrors.Errors) != 0 {
 		c.JSON(http.StatusBadRequest, dto.BuildResponse[NamedValidationErrors](constants.InvalidRequest, *emailErrors))
 		c.Abort()
+		return false
 	}
 
 	if exist := us.UserRepo.IsUserAttributeExist("email", registerForm.Email); exist {
-		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.RegisteredEmail, nil))
+		emailErrors.Errors = append(
+			emailErrors.Errors,
+			ValidationError{Type: "existed_email", Description: "This email already registered"},
+		)
+		c.JSON(http.StatusBadRequest, dto.BuildResponse[NamedValidationErrors](constants.InvalidRequest, *emailErrors))
 		c.Abort()
+		return false
 	}
 
 	if exist := us.UserRepo.IsUserAttributeExist("username", registerForm.Email); exist {
-		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.RegisteredUsername, nil))
+		usernameErrors.Errors = append(
+			usernameErrors.Errors,
+			ValidationError{Type: "existed_username", Description: "This username already registered"},
+		)
+		c.JSON(http.StatusBadRequest, dto.BuildResponse[NamedValidationErrors](constants.InvalidRequest, *usernameErrors))
 		c.Abort()
+		return false
 	}
 
+	return true
 }
 
-func (us UserService) validateLogin(c *gin.Context, loginForm *LoginUserForm) {
+func (us UserService) validateLogin(c *gin.Context, loginForm *LoginUserForm) bool {
 	var user *domain.User
 
 	user, err := us.UserRepo.GetUserByAttribute("email", loginForm.Email)
@@ -116,11 +134,15 @@ func (us UserService) validateLogin(c *gin.Context, loginForm *LoginUserForm) {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.UserNotFound, nil))
 			c.Abort()
+			return false
 		}
 	}
 
 	if err := user.ValidatePassword(loginForm.Password); err != nil {
 		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.IncorrectPassword, nil))
 		c.Abort()
+		return false
 	}
+
+	return true
 }

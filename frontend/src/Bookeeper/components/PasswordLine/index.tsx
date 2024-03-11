@@ -1,31 +1,52 @@
-import { Box, BoxProps, useTheme } from "@mui/material";
+import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
+import { Box, BoxProps, Typography, useTheme } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { FC } from "react";
 
 type Props = Omit<BoxProps, "display" | "alignItems" | "gap" | "margin"> & {
   strength: number;
+  limits: number[];
+  showStatus?: boolean;
 };
 
-const generateColors = (strength: number, palette: Palette) => {
-  if (strength >= 80) {
+const generateColors = (strength: number, limits: number[], palette: Palette) => {
+  if (strength >= limits[2] ?? 80) {
     return [palette.primary.main, palette.primary.main, palette.primary.main];
-  } else if (strength >= 50) {
+  } else if (strength >= limits[1] ?? 50) {
     return [palette.primary.main, palette.primary.main, palette.background.default];
-  } else if (strength >= 25) {
+  } else if (strength >= limits[0] ?? 25) {
     return [palette.warning.main, palette.background.default, palette.background.default];
   } else {
     return [palette.background.default, palette.background.default, palette.background.default];
   }
 };
 
-const PasswordLine: FC<Props> = ({ strength, ...props }) => {
-  const theme = useTheme();
-  const colors = generateColors(strength, theme.palette);
+const PasswordLine: FC<Props> = ({ strength, limits, showStatus, ...props }) => {
+  const { palette } = useTheme();
+  const colors = generateColors(strength, limits, palette);
   return (
-    <Box {...props} display="flex" alignItems="center" justifyContent="center" gap="5px">
-      {colors.map((color, index) => (
-        <Box key={`password-color-${index}`} flex={1} height="5px" bgcolor={color} borderRadius="4px"></Box>
-      ))}
+    <Box>
+      <Box {...props} display="flex" alignItems="center" justifyContent="center" gap="5px">
+        {colors.map((color, index) => (
+          <Box key={`password-color-${index}`} flex={1} height="5px" bgcolor={color} borderRadius="4px"></Box>
+        ))}
+      </Box>
+      {showStatus && <Box
+        sx={{
+          display: "flex",
+          mt: 1,
+          color: strength < limits[1] ?? 50 ? palette.warning.main : palette.primary.main,
+        }}
+      >
+        {strength >= limits[1] ?? 50 ? <CheckCircleOutline /> : <ErrorOutline />}
+        <Typography variant="inherit" sx={{ ml: 1 }}>
+          {strength >= limits[2] ?? 80
+            ? "Strong password"
+            : strength >= limits[1] ?? 50
+            ? "Medium password"
+            : "Password too weak"}
+        </Typography>
+      </Box>}
     </Box>
   );
 };

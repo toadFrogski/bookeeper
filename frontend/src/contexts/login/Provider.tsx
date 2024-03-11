@@ -1,7 +1,6 @@
 import { FC, PropsWithChildren, ReactNode, useCallback, useEffect, useState } from "react";
 import Context from "./Context";
 import { Auth } from "../../services/api";
-import { useNavigate } from "react-router-dom";
 
 type Props = PropsWithChildren & {
   fallback?: ReactNode;
@@ -10,12 +9,11 @@ type Props = PropsWithChildren & {
 const Provider: FC<Props> = ({ children, fallback }) => {
   const [token, setToken] = useState<Auth>({ token: "" });
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   const logout = useCallback(() => {
     setToken({ token: "" });
     localStorage.removeItem("accessToken");
-    navigate("/")
+    // navigate("/")
   }, []);
 
   const setSessionToken = (token: Auth) => {

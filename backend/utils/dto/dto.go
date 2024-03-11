@@ -7,7 +7,7 @@ import (
 type (
 	Response[T any] struct {
 		ResponseCode    int    `json:"response_code"`
-		ResponseMessage string `json:"response_messsage"`
+		ResponseMessage string `json:"response_message"`
 		Data            T      `json:"data"`
 	} // @name Response
 

@@ -1,9 +1,14 @@
-import { Box, Button, Container, FormControl, InputLabel, OutlinedInput, Paper } from "@mui/material";
-import { FC, MouseEventHandler, useContext, useReducer, useState } from "react";
+import { Box, Button, Container, FormControl, Paper, TextField, Typography, useTheme } from "@mui/material";
+import { FC, MouseEventHandler, useContext, useState } from "react";
 import styles from "./styles.module.scss";
 import { ApiContext } from "../../contexts/api";
 import { LoginContext } from "../../../contexts/login";
 import { Password, PasswordLine } from "../../components";
+import { useNavigate } from "react-router-dom";
+import { useStateWithError } from "../../../utils/hooks";
+import { isAxiosError } from "axios";
+import { NamedValidationErrors } from "../../../services/api";
+import { ErrorOutline } from "@mui/icons-material";
 
 const atLeastMinimumLength = (password: string) => new RegExp(/(?=.{8,})/).test(password);
 const atLeastOneUppercaseLetter = (password: string) => new RegExp(/(?=.*?[A-Z])/).test(password);
@@ -11,81 +16,63 @@ const atLeastOneLowercaseLetter = (password: string) => new RegExp(/(?=.*?[a-z])
 const atLeastOneNumber = (password: string) => new RegExp(/(?=.*?[0-9])/).test(password);
 const atLeastOneSpecialChar = (password: string) => new RegExp(/(?=.*?[#?!@$ %^&*-])/).test(password);
 
-type PasswordStatus = {
-  minimumLength: boolean;
-  oneUppercaseLetter: boolean;
-  oneLowercaseLetter: boolean;
-  oneNumber: boolean;
-  oneSpecialChar: boolean;
-};
-
-const initialStates = {
-  passwordStatus: {
-    minimumLength: false,
-    oneUppercaseLetter: false,
-    oneLowercaseLetter: false,
-    oneNumber: false,
-    oneSpecialChar: false,
-  },
-};
-
 const SignUp: FC = () => {
   const { authApi } = useContext(ApiContext);
   const { setToken } = useContext(LoginContext);
+  const { palette } = useTheme();
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const email = useStateWithError("");
+  const username = useStateWithError("");
   const [password, setPassword] = useState("");
+  const [commonError, setCommonError] = useState("");
 
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [passwordStatus, setPasswordStatus] = useState<PasswordStatus>(initialStates.passwordStatus);
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     authApi
-      .registerPost({ email: email, password: password, username: username })
+      .registerPost({ email: email.value, password: password, username: username.value })
       .then((res) => {
         if (res.data.data) {
           setToken(res.data.data);
+          navigate("/");
         }
       })
       .catch((err) => {
-        console.log(err);
+        if (isAxiosError(err)) {
+          console.log(err);
+          if (err.response && err.response.data.response_message === "INVALID_REQUEST") {
+            const data: NamedValidationErrors = err.response.data.data;
+            switch (data.name) {
+              case "email":
+                data.errors?.forEach((error) => {
+                  if (error.type === "invalid_email") email.setError("Error.invalidEmail");
+                  if (error.type === "existed_email") email.setError("Error.existedEmail");
+                });
+                break;
+              case "username":
+                data.errors?.forEach((error) => {
+                  if (error.type === "existed_username") email.setError("Error.existedUsername");
+                });
+                break;
+              default:
+                setCommonError("Error.unexpectedError");
+                break;
+            }
+          } else setCommonError("Error.unexpectedError");
+        } else setCommonError("Error.unexpectedError");
       });
   };
 
   const validatePassword = (password: string) => {
     let strength: number = 0;
-    if (atLeastMinimumLength(password)) {
-      strength += 35;
-      setPasswordStatus((status) => ({ ...status, minimumLength: false }));
-    } else {
-      setPasswordStatus((status) => ({ ...status, minimumLength: true }));
-    }
-    if (atLeastOneLowercaseLetter(password)) {
-      strength += 5;
-      setPasswordStatus((status) => ({ ...status, oneLowercaseLetter: false }));
-    } else {
-      setPasswordStatus((status) => ({ ...status, oneLowercaseLetter: true }));
-    }
-    if (atLeastOneUppercaseLetter(password)) {
-      strength += 5;
-      setPasswordStatus((status) => ({ ...status, oneUppercaseLetter: false }));
-    } else {
-      setPasswordStatus((status) => ({ ...status, oneUppercaseLetter: true }));
-    }
-    if (atLeastOneNumber(password)) {
-      strength += 15;
-      setPasswordStatus((status) => ({ ...status, oneNumber: false }));
-    } else {
-      setPasswordStatus((status) => ({ ...status, oneNumber: true }));
-    }
-    if (atLeastOneSpecialChar(password)) {
-      strength += 20;
-      setPasswordStatus((status) => ({ ...status, oneSpecialChar: false }));
-    } else {
-      setPasswordStatus((status) => ({ ...status, oneSpecialChar: true }));
-    }
+
+    if (atLeastMinimumLength(password)) strength += 40;
+    if (atLeastOneLowercaseLetter(password)) strength += 5;
+    if (atLeastOneUppercaseLetter(password)) strength += 5;
+    if (atLeastOneNumber(password)) strength += 5;
+    if (atLeastOneSpecialChar(password)) strength += 5;
 
     setPasswordStrength(strength);
   };
@@ -94,25 +81,35 @@ const SignUp: FC = () => {
     <Container maxWidth="sm">
       <Box component="section" className={styles.registerForm}>
         <Paper sx={{ padding: 5 }}>
+          {commonError != "" && (
+            <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
+              <ErrorOutline />
+              <Typography sx={{ ml: 1 }} variant="inherit">
+                {commonError}
+              </Typography>
+            </Box>
+          )}
           <FormControl sx={{ width: "100%" }}>
-            <InputLabel htmlFor="form-element-email">Email</InputLabel>
-            <OutlinedInput
-              value={email}
+            <TextField
+              error={email.error != ""}
+              variant="outlined"
+              value={email.value}
+              helperText={email.error}
               onChange={(e) => {
-                setEmail(e.target.value);
+                email.setValue(e.target.value);
               }}
-              id="form-element-email"
               label="Email"
             />
           </FormControl>
           <FormControl sx={{ width: "100%", mt: 2 }}>
-            <InputLabel htmlFor="form-element-username">Username</InputLabel>
-            <OutlinedInput
-              value={username}
+            <TextField
+              error={username.error != ""}
+              variant="outlined"
+              value={username.value}
+              helperText={username.error}
               onChange={(e) => {
-                setUsername(e.target.value);
+                username.setValue(e.target.value);
               }}
-              id="form-element-username"
               label="Username"
             />
           </FormControl>
@@ -121,15 +118,20 @@ const SignUp: FC = () => {
             password={password}
             setPassword={(password) => {
               setPassword(password);
-              validatePassword(password)
+              validatePassword(password);
             }}
           />
-          <PasswordLine sx={{ mt: 1 }} strength={passwordStrength} />
+          <PasswordLine
+            sx={{ mt: 1 }}
+            strength={passwordStrength}
+            limits={[10, 50, 60]}
+            showStatus={password.length > 2}
+          />
           <Button
             sx={{ width: "100%", mt: 3, minHeight: "56px" }}
             variant="contained"
             onClick={handleSubmit}
-            disabled={email.length === 0 || passwordStrength < 50}
+            disabled={email.value.length === 0 || username.value.length === 0 || passwordStrength < 50}
           >
             Submit
           </Button>

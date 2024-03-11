@@ -21,7 +21,7 @@ type UserController struct {
 // @Produce json
 // @Param   register body RegisterUserForm true "Register form"
 // @Success 200 {object} AuthResponse
-// @Failure 400 {object} AnyResponse
+// @Failure 400 {object} NamedValidationErrorsResponse
 // @Failure 500 {object} AnyResponse
 // @Router /register [post]
 func (uc UserController) Register(c *gin.Context) {
@@ -35,7 +35,7 @@ func (uc UserController) Register(c *gin.Context) {
 // @Produce json
 // @Param   login body LoginUserForm true "Login form"
 // @Success 200 {object} AuthResponse
-// @Failure 400 {object} AnyResponse
+// @Failure 400 {object} NamedValidationErrorsResponse
 // @Failure 500 {object} AnyResponse
 // @Router /login [post]
 func (uc UserController) Login(c *gin.Context) {
