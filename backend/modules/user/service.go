@@ -57,7 +57,8 @@ func (us UserService) Login(c *gin.Context) {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	if ok := us.validateLogin(c, loginUserForm); !ok {
+	user = us.validateLogin(c, loginUserForm)
+	if user == nil {
 		return
 	}
 
@@ -125,24 +126,24 @@ func (us UserService) validateRegister(c *gin.Context, registerForm *RegisterUse
 	return true
 }
 
-func (us UserService) validateLogin(c *gin.Context, loginForm *LoginUserForm) bool {
+func (us UserService) validateLogin(c *gin.Context, loginForm *LoginUserForm) *domain.User {
 	var user *domain.User
 
-	user, err := us.UserRepo.GetUserByAttribute("email", loginForm.Email)
+	user, err := us.UserRepo.GetUserByEmail(loginForm.Email)
 	if err != nil {
-		user, err = us.UserRepo.GetUserByAttribute("username", loginForm.Email)
+		user, err = us.UserRepo.GetUserByUsername(loginForm.Email)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.UserNotFound, nil))
 			c.Abort()
-			return false
+			return nil
 		}
 	}
 
 	if err := user.ValidatePassword(loginForm.Password); err != nil {
 		c.JSON(http.StatusBadRequest, dto.BuildResponse[any](constants.IncorrectPassword, nil))
 		c.Abort()
-		return false
+		return nil
 	}
 
-	return true
+	return user
 }

@@ -24,7 +24,7 @@ const SignUp: FC = () => {
 
   const email = useStateWithError("");
   const username = useStateWithError("");
-  const [password, setPassword] = useState("");
+  const password = useStateWithError("");
   const [commonError, setCommonError] = useState("");
 
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -32,7 +32,7 @@ const SignUp: FC = () => {
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     authApi
-      .registerPost({ email: email.value, password: password, username: username.value })
+      .registerPost({ email: email.value, password: password.value, username: username.value })
       .then((res) => {
         if (res.data.data) {
           setToken(res.data.data);
@@ -115,17 +115,18 @@ const SignUp: FC = () => {
           </FormControl>
           <Password
             sx={{ width: "100%", mt: 2 }}
-            password={password}
+            password={password.value}
             setPassword={(password) => {
-              setPassword(password);
               validatePassword(password);
+              password.setPassword(password);
             }}
+            error={password.error}
           />
           <PasswordLine
             sx={{ mt: 1 }}
             strength={passwordStrength}
             limits={[10, 50, 60]}
-            showStatus={password.length > 2}
+            showStatus={password.value.length > 2}
           />
           <Button
             sx={{ width: "100%", mt: 3, minHeight: "56px" }}

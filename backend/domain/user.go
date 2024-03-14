@@ -37,7 +37,8 @@ type (
 
 	IUserRepository interface {
 		CreateUser(u *User) error
-		GetUserByAttribute(attr string, value string) (*User, error)
+		GetUserByUsername(username string) (*User, error)
+		GetUserByEmail(email string) (*User, error)
 		GetUserByID(ID uint) (*User, error)
 		GetUserInfoByID(ID uint) (*User, error)
 		IsUserAttributeExist(attr string, value string) bool

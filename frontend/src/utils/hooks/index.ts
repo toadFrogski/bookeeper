@@ -1,3 +1,3 @@
-import useStateWithError from "./useStateWithError";
+import useStateWithError, {UseStateWithErrorReturnType} from "./useStateWithError";
 
-export { useStateWithError}
+export { useStateWithError, type UseStateWithErrorReturnType}

@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
-type UseStateWithErrorReturnType<S> = {
+export type UseStateWithErrorReturnType<S> = {
   value: S;
   setValue: Dispatch<SetStateAction<S>>;
   error: string;
