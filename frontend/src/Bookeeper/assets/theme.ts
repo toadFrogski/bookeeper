@@ -27,6 +27,17 @@ const darkThemeOptions: ThemeOptions = {
   typography: {
     fontFamily: "Roboto",
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-box-shadow: none !important;
+      }`,
+    },
+  },
 };
 
 const lightThemeOptions: ThemeOptions = {
@@ -45,6 +56,17 @@ const lightThemeOptions: ThemeOptions = {
   },
   typography: {
     fontFamily: "Roboto",
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-box-shadow: none !important;
+      }`,
+    },
   },
 };
 

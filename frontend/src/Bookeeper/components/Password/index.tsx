@@ -23,6 +23,7 @@ const Password: FC<Props> = ({ password, setPassword, error, ...props}: Props) =
         onChange={(e) => setPassword(e.target.value)}
         label="Password"
         InputProps={{
+          autoComplete: "new-password",
           endAdornment: (
             <InputAdornment position="end">
               <IconButton

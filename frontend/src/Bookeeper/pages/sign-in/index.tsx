@@ -1,8 +1,18 @@
-import { Box, Button, Container, FormControl, Paper, TextField, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  Paper,
+  TextField,
+  Typography,
+  useTheme,
+  Link as MuiLink,
+} from "@mui/material";
 
 import { FC, MouseEventHandler, useContext, useState } from "react";
 import styles from "./styles.module.scss";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ApiContext } from "../../contexts/api";
 import { LoginContext } from "../../../contexts/login";
 import { Password } from "../../components";
@@ -56,45 +66,45 @@ const SignIn: FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box component="section" className={styles.loginForm}>
+      <Box component="section" className={styles.loginForm} >
         <Paper sx={{ padding: 5 }} elevation={1}>
-          {commonError != "" && (
-            <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
-              <ErrorOutline />
-              <Typography sx={{ ml: 1 }} variant="inherit">
-                {commonError}
-              </Typography>
-            </Box>
-          )}
-          <FormControl sx={{ width: "100%" }}>
-            <TextField
-              error={email.error != ""}
-              variant="outlined"
-              value={email.value}
-              helperText={email.error}
-              onChange={(e) => {
-                email.setValue(e.target.value);
-              }}
-              label="Email or username"
+            {commonError != "" && (
+              <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
+                <ErrorOutline />
+                <Typography sx={{ ml: 1 }} variant="inherit">
+                  {commonError}
+                </Typography>
+              </Box>
+            )}
+            <FormControl sx={{ width: "100%" }}>
+              <TextField
+                error={email.error != ""}
+                variant="outlined"
+                value={email.value}
+                helperText={email.error}
+                onChange={(e) => {
+                  email.setValue(e.target.value);
+                }}
+                label="Email or username"
+              />
+            </FormControl>
+            <Password
+              sx={{ width: "100%", mt: 3 }}
+              password={password.value}
+              setPassword={(value) => password.setValue(value)}
+              error={password.error}
             />
-          </FormControl>
-          <Password
-            sx={{ width: "100%", mt: 3 }}
-            password={password.value}
-            setPassword={(value) => password.setValue(value)}
-            error={password.error}
-          />
-          {/* <MuiLink aria-disabled sx={{ mt: 2, display: "block" }} component={Link} to="/">
-            Forgot password
-          </MuiLink> */}
-          <Button
-            sx={{ width: "100%", mt: 3, minHeight: "56px" }}
-            variant="contained"
-            onClick={handleSubmit}
-            disabled={email.value.length === 0 || password.value.length == 0}
-          >
-            Submit
-          </Button>
+            <MuiLink aria-disabled sx={{ mt: 2, display: "block" }} component={Link} to="/">
+              Forgot password
+            </MuiLink>
+            <Button
+              sx={{ width: "100%", mt: 3, minHeight: "56px" }}
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={email.value.length === 0 || password.value.length == 0}
+            >
+              Submit
+            </Button>
         </Paper>
       </Box>
     </Container>

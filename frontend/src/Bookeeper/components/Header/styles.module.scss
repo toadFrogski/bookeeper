@@ -8,6 +8,40 @@
     .controlPanel {
       align-items: center;
       display: flex;
+      gap: 2em;
+
+      .cpElementSM {
+        display: none;
+      }
+
+      @media screen and (max-width: 720px) {
+        gap: 5px;
+
+        .cpElementSM {
+          display: flex;
+        }
+
+        .cpElement {
+          display: none;
+        }
+      }
+    }
+
+    .modeSwitcher {
+      .switchElement {
+        animation-name: switcher;
+        animation-duration: 0.5s;
+        transform-origin: -100% 50%;
+      }
+    }
+
+    @keyframes switcher {
+      0% {
+        transform: rotate(45deg);
+      }
+      100% {
+        transform: rotate(0);
+      }
     }
   }
 }
