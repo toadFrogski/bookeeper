@@ -1,0 +1,13 @@
+.header {
+  .container {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .controlPanel {
+      align-items: center;
+      display: flex;
+    }
+  }
+}

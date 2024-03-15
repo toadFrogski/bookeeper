@@ -80,7 +80,7 @@ const SignUp: FC = () => {
   return (
     <Container maxWidth="sm">
       <Box component="section" className={styles.registerForm}>
-        <Paper sx={{ padding: 5 }}>
+        <Paper sx={{ padding: 5 }} elevation={2}>
           {commonError != "" && (
             <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
               <ErrorOutline />
@@ -116,9 +116,9 @@ const SignUp: FC = () => {
           <Password
             sx={{ width: "100%", mt: 2 }}
             password={password.value}
-            setPassword={(password) => {
-              validatePassword(password);
-              password.setPassword(password);
+            setPassword={(value) => {
+              validatePassword(value);
+              password.setValue(value);
             }}
             error={password.error}
           />

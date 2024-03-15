@@ -3,7 +3,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { FormControl, FormControlProps, IconButton, InputAdornment, TextField } from "@mui/material";
 import {FC, useState } from "react";
 
-type Props = FormControlProps & {
+type Props = Omit<FormControlProps, "error"> & {
   password: string;
   error: string;
   setPassword: (password: string) => void;

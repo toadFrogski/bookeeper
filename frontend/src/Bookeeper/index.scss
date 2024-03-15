@@ -1,1 +1,11 @@
 @import url("./assets/fonts/fonts.scss");
+
+:root[data-theme="dark"] {
+  --background-color: #121212;
+  --negative-background-color: #fff;
+}
+
+:root[data-theme="light"] {
+  --background-color: #fff;
+  --negative-background-color: #121212;
+}

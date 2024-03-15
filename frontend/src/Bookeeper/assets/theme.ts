@@ -1,13 +1,27 @@
-import { ThemeOptions } from "@mui/material";
+import { ThemeOptions, alpha } from "@mui/material";
+
+const light = {
+  primaryBase: "#43a047",
+  secondaryBase: "#7cb342",
+};
+
+const dark = {
+  primaryBase: "#43a047",
+  secondaryBase: "#7cb342",
+};
 
 const darkThemeOptions: ThemeOptions = {
   palette: {
     mode: "dark",
     primary: {
-      main: "#43a047",
+      main: alpha(light.primaryBase, 0.7),
+      light: alpha(light.primaryBase, 0.9),
+      dark: alpha(light.primaryBase, 0.5),
     },
     secondary: {
-      main: "#7cb342",
+      main: alpha(light.secondaryBase, 0.7),
+      light: alpha(light.secondaryBase, 0.9),
+      dark: alpha(light.secondaryBase, 0.5),
     },
   },
   typography: {
@@ -19,10 +33,14 @@ const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: "light",
     primary: {
-      main: "#43a047",
+      main: alpha(dark.primaryBase, 0.7),
+      light: alpha(dark.primaryBase, 0.9),
+      dark: alpha(dark.primaryBase, 0.5),
     },
     secondary: {
-      main: "#7cb342",
+      main: alpha(dark.secondaryBase, 0.7),
+      light: alpha(dark.secondaryBase, 0.9),
+      dark: alpha(dark.secondaryBase, 0.5),
     },
   },
   typography: {

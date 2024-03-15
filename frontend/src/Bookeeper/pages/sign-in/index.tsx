@@ -57,7 +57,7 @@ const SignIn: FC = () => {
   return (
     <Container maxWidth="sm">
       <Box component="section" className={styles.loginForm}>
-        <Paper sx={{ padding: 5 }}>
+        <Paper sx={{ padding: 5 }} elevation={1}>
           {commonError != "" && (
             <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
               <ErrorOutline />
