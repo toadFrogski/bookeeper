@@ -1,10 +1,11 @@
 import { FC, useContext } from "react";
 import styles from "./styles.module.scss";
-import { Button, Container, IconButton, Typography } from "@mui/material";
+import { Button, Container, IconButton, Typography, Link as MuiLink } from "@mui/material";
 import { LoginContext } from "../../../contexts/login";
 import { Login, Logout, LightMode, DarkMode, AccountBox } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SessionContext } from "../../../contexts/session";
+import urls from "../../utils/urls";
 
 const Header: FC = () => {
   const { token, logout } = useContext(LoginContext);
@@ -22,12 +23,14 @@ const Header: FC = () => {
   return (
     <div className={styles.header}>
       <Container className={styles.container}>
-        <Typography display={{ xs: "none", md: "block" }} variant="h4">
-          Bookeeper
-        </Typography>
-        <Typography display={{ xs: "block", md: "none" }} variant="h4">
-          //.bk
-        </Typography>
+        <MuiLink component={Link} to={urls.home} sx={{textDecoration: "none", color: "inherit"}}>
+          <Typography display={{ xs: "none", md: "block" }} variant="h4">
+            Bookeeper
+          </Typography>
+          <Typography display={{ xs: "block", md: "none" }} variant="h4">
+            //.bk
+          </Typography>
+        </MuiLink>
 
         <div className={styles.controlPanel}>
           <IconButton className={styles.modeSwitcher} onClick={switchTheme} color="inherit">
@@ -39,14 +42,14 @@ const Header: FC = () => {
           </IconButton>
 
           {token.token && (
-            <>
+            <MuiLink component={Link} to={urls.profile} sx={{textDecoration: "none", color: "inherit"}}>
               <IconButton className={styles.cpElementSM}>
                 <AccountBox />
               </IconButton>
               <Button className={styles.cpElement} color="inherit" startIcon={<AccountBox />}>
                 Profile
               </Button>
-            </>
+            </MuiLink>
           )}
           <IconButton className={styles.cpElementSM} onClick={handleLogin}>
             {token.token !== "" ? <Logout /> : <Login />}
