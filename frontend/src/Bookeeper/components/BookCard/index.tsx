@@ -9,7 +9,7 @@ type Props = BoxProps & {
   owner: string;
 };
 
-const BookCard: FC<Props> = ({ title, author, photo, owner, ...props }) => {
+const BookCard: FC<Props> = ({ title, author, photo, ...props }) => {
   return (
     <Box {...props} className={styles.bookCard} component="div">
       <div className={styles.photoWrap}>
@@ -20,10 +20,9 @@ const BookCard: FC<Props> = ({ title, author, photo, owner, ...props }) => {
           <Typography className={styles.text} variant="h5">
             {title}
           </Typography>
-          <Typography className={styles.text}>{author}</Typography>
-          <Typography className={styles.text}>{owner}</Typography>
+          <Typography variant="caption" className={styles.text}>{author}</Typography>
         </Box>
-        <Button variant="outlined" color="inherit" sx={{ border: "2px solid"}}>
+        <Button variant="outlined" color="inherit" sx={{ mt: 1,  border: "2px solid"}}>
           Inquire
         </Button>
       </div>

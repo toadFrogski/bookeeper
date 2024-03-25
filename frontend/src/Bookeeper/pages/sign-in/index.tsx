@@ -20,6 +20,7 @@ import { isAxiosError } from "axios";
 import { useStateWithError } from "../../../utils/hooks";
 import { ErrorOutline } from "@mui/icons-material";
 import { AnyResponse } from "../../../services/api";
+import urls from "../../utils/urls";
 
 const SignIn: FC = () => {
   const { authApi } = useContext(ApiContext);
@@ -67,7 +68,7 @@ const SignIn: FC = () => {
   return (
     <Container maxWidth="sm">
       <Box component="section" className={styles.loginForm} >
-        <Paper sx={{ padding: 5 }} elevation={1}>
+        <Paper sx={{ padding: 5 }} elevation={3}>
             {commonError != "" && (
               <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
                 <ErrorOutline />
@@ -94,8 +95,8 @@ const SignIn: FC = () => {
               setPassword={(value) => password.setValue(value)}
               error={password.error}
             />
-            <MuiLink aria-disabled sx={{ mt: 2, display: "block" }} component={Link} to="/">
-              Forgot password
+            <MuiLink aria-disabled sx={{ mt: 2, display: "block" }} component={Link} to={urls.signUp}>
+              Sign up for an account
             </MuiLink>
             <Button
               sx={{ width: "100%", mt: 3, minHeight: "56px" }}

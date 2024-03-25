@@ -7,7 +7,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { SessionContext } from "../../../contexts/session";
 import urls from "../../utils/urls";
 
-const Header: FC = () => {
+type Props = {
+  disableSign?: boolean;
+};
+
+const Header: FC<Props> = ({ disableSign }) => {
   const { token, logout } = useContext(LoginContext);
   const { theme, switchTheme } = useContext(SessionContext);
   const navigate = useNavigate();
@@ -23,7 +27,7 @@ const Header: FC = () => {
   return (
     <div className={styles.header}>
       <Container className={styles.container}>
-        <MuiLink component={Link} to={urls.home} sx={{textDecoration: "none", color: "inherit"}}>
+        <MuiLink component={Link} to={urls.home} sx={{ textDecoration: "none", color: "inherit" }}>
           <Typography display={{ xs: "none", md: "block" }} variant="h4">
             Bookeeper
           </Typography>
@@ -41,27 +45,31 @@ const Header: FC = () => {
             )}
           </IconButton>
 
-          {token.token && (
-            <MuiLink component={Link} to={urls.profile} sx={{textDecoration: "none", color: "inherit"}}>
-              <IconButton className={styles.cpElementSM}>
-                <AccountBox />
+          {!disableSign && (
+            <>
+              {token.token && (
+                <MuiLink component={Link} to={urls.profile} sx={{ textDecoration: "none", color: "inherit" }}>
+                  <IconButton className={styles.cpElementSM}>
+                    <AccountBox />
+                  </IconButton>
+                  <Button className={styles.cpElement} color="inherit" startIcon={<AccountBox />}>
+                    Profile
+                  </Button>
+                </MuiLink>
+              )}
+              <IconButton className={styles.cpElementSM} onClick={handleLogin}>
+                {token.token !== "" ? <Logout /> : <Login />}
               </IconButton>
-              <Button className={styles.cpElement} color="inherit" startIcon={<AccountBox />}>
-                Profile
+              <Button
+                className={styles.cpElement}
+                onClick={handleLogin}
+                color="inherit"
+                startIcon={token.token !== "" ? <Logout /> : <Login />}
+              >
+                {token.token !== "" ? "Logout" : "Login"}
               </Button>
-            </MuiLink>
+            </>
           )}
-          <IconButton className={styles.cpElementSM} onClick={handleLogin}>
-            {token.token !== "" ? <Logout /> : <Login />}
-          </IconButton>
-          <Button
-            className={styles.cpElement}
-            onClick={handleLogin}
-            color="inherit"
-            startIcon={token.token !== "" ? <Logout /> : <Login />}
-          >
-            {token.token !== "" ? "Logout" : "Login"}
-          </Button>
         </div>
       </Container>
     </div>

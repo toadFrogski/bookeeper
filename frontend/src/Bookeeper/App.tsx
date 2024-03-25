@@ -19,6 +19,8 @@ const App: FC = () => {
         <Routes>
           <Route path={urls.home} element={<Header />} />
           <Route path={urls.profile} element={<Header />} />
+          <Route path={urls.signIn} element={<Header disableSign/>} />
+          <Route path={urls.signUp} element={<Header disableSign/>} />
         </Routes>
         <Routes>
           <Route element={<PrivateRoute />}>

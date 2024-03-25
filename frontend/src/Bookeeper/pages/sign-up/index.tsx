@@ -1,14 +1,25 @@
-import { Box, Button, Container, FormControl, Paper, TextField, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  Paper,
+  TextField,
+  Typography,
+  useTheme,
+  Link as MuiLink,
+} from "@mui/material";
 import { FC, MouseEventHandler, useContext, useState } from "react";
 import styles from "./styles.module.scss";
 import { ApiContext } from "../../contexts/api";
 import { LoginContext } from "../../../contexts/login";
 import { Password, PasswordLine } from "../../components";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStateWithError } from "../../../utils/hooks";
 import { isAxiosError } from "axios";
 import { NamedValidationErrors } from "../../../services/api";
 import { ErrorOutline } from "@mui/icons-material";
+import urls from "../../utils/urls";
 
 const atLeastMinimumLength = (password: string) => new RegExp(/(?=.{8,})/).test(password);
 const atLeastOneUppercaseLetter = (password: string) => new RegExp(/(?=.*?[A-Z])/).test(password);
@@ -80,7 +91,7 @@ const SignUp: FC = () => {
   return (
     <Container maxWidth="sm">
       <Box component="section" className={styles.registerForm}>
-        <Paper sx={{ padding: 5 }} elevation={2}>
+        <Paper sx={{ padding: 5 }} elevation={3}>
           {commonError != "" && (
             <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
               <ErrorOutline />
@@ -128,6 +139,9 @@ const SignUp: FC = () => {
             limits={[10, 50, 60]}
             showStatus={password.value.length > 2}
           />
+          <MuiLink aria-disabled sx={{ mt: 2, display: "block" }} component={Link} to={urls.signIn}>
+            Do you already have an account?
+          </MuiLink>
           <Button
             sx={{ width: "100%", mt: 3, minHeight: "56px" }}
             variant="contained"
