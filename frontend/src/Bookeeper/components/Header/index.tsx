@@ -1,11 +1,12 @@
 import { FC, useContext } from "react";
 import styles from "./styles.module.scss";
-import { Button, Container, IconButton, Typography, Link as MuiLink } from "@mui/material";
+import { Button, Container, IconButton, Typography, Link as MuiLink, Stack } from "@mui/material";
 import { LoginContext } from "../../../contexts/login";
 import { Login, Logout, LightMode, DarkMode, AccountBox } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { SessionContext } from "../../../contexts/session";
 import urls from "../../utils/urls";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   disableSign?: boolean;
@@ -15,6 +16,7 @@ const Header: FC<Props> = ({ disableSign }) => {
   const { token, logout } = useContext(LoginContext);
   const { theme, switchTheme } = useContext(SessionContext);
   const navigate = useNavigate();
+  const [t] = useTranslation();
 
   const handleLogin = () => {
     if (token.token !== "") {
@@ -37,13 +39,15 @@ const Header: FC<Props> = ({ disableSign }) => {
         </MuiLink>
 
         <div className={styles.controlPanel}>
-          <IconButton className={styles.modeSwitcher} onClick={switchTheme} color="inherit">
-            {theme === "light" ? (
-              <LightMode className={styles.switchElement} />
-            ) : (
-              <DarkMode className={styles.switchElement} />
-            )}
-          </IconButton>
+          <Stack>
+            <IconButton className={styles.modeSwitcher} onClick={switchTheme} color="inherit">
+              {theme === "light" ? (
+                <LightMode className={styles.switchElement} />
+              ) : (
+                <DarkMode className={styles.switchElement} />
+              )}
+            </IconButton>
+          </Stack>
 
           {!disableSign && (
             <>
@@ -53,7 +57,7 @@ const Header: FC<Props> = ({ disableSign }) => {
                     <AccountBox />
                   </IconButton>
                   <Button className={styles.cpElement} color="inherit" startIcon={<AccountBox />}>
-                    Profile
+                    {t("common.profile")}
                   </Button>
                 </MuiLink>
               )}
@@ -66,7 +70,7 @@ const Header: FC<Props> = ({ disableSign }) => {
                 color="inherit"
                 startIcon={token.token !== "" ? <Logout /> : <Login />}
               >
-                {token.token !== "" ? "Logout" : "Login"}
+                {token.token !== "" ? t("common.logout") : t("common.login")}
               </Button>
             </>
           )}

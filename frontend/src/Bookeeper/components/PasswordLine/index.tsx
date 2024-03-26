@@ -2,6 +2,7 @@ import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
 import { Box, BoxProps, Typography, useTheme } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = Omit<BoxProps, "display" | "alignItems" | "gap" | "margin"> & {
   strength: number;
@@ -24,6 +25,8 @@ const generateColors = (strength: number, limits: number[], palette: Palette) =>
 const PasswordLine: FC<Props> = ({ strength, limits, showStatus, ...props }) => {
   const { palette } = useTheme();
   const colors = generateColors(strength, limits, palette);
+  const [t] = useTranslation();
+
   return (
     <Box>
       <Box {...props} display="flex" alignItems="center" justifyContent="center" gap="5px">
@@ -31,22 +34,24 @@ const PasswordLine: FC<Props> = ({ strength, limits, showStatus, ...props }) => 
           <Box key={`password-color-${index}`} flex={1} height="5px" bgcolor={color} borderRadius="4px"></Box>
         ))}
       </Box>
-      {showStatus && <Box
-        sx={{
-          display: "flex",
-          mt: 1,
-          color: strength < limits[1] ?? 50 ? palette.warning.main : palette.primary.main,
-        }}
-      >
-        {strength >= limits[1] ?? 50 ? <CheckCircleOutline /> : <ErrorOutline />}
-        <Typography variant="inherit" sx={{ ml: 1 }}>
-          {strength >= limits[2] ?? 80
-            ? "Strong password"
-            : strength >= limits[1] ?? 50
-            ? "Medium password"
-            : "Password too weak"}
-        </Typography>
-      </Box>}
+      {showStatus && (
+        <Box
+          sx={{
+            display: "flex",
+            mt: 1,
+            color: strength < limits[1] ?? 50 ? palette.warning.main : palette.primary.main,
+          }}
+        >
+          {strength >= limits[1] ?? 50 ? <CheckCircleOutline /> : <ErrorOutline />}
+          <Typography variant="inherit" sx={{ ml: 1 }}>
+            {strength >= limits[2] ?? 80
+              ? t("common.strongPassword")
+              : strength >= limits[1] ?? 50
+              ? t("common.mediumPassword")
+              : t("common.weakPassword")}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

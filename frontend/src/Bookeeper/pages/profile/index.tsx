@@ -1,7 +1,8 @@
-import { Box, Container, Fab, Menu, Typography } from "@mui/material";
-import { FC, useEffect, useRef, useState } from "react";
-import { BookCard } from "../../components";
-import { Menu as MenuIcon } from "@mui/icons-material";
+import { Box, Chip, Container, Stack, Typography } from "@mui/material";
+import { FC } from "react";
+import { ActionMenu, BookCard } from "../../components";
+import { Edit, Delete } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 type Book = {
   title: string;
@@ -32,8 +33,7 @@ const mock: Book[] = [
 ];
 
 const Profile: FC = () => {
-  const menuRef = useRef();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [t] = useTranslation();
 
   return (
     <Container sx={{ mt: 5 }}>
@@ -49,30 +49,34 @@ const Profile: FC = () => {
         }}
       >
         {mock.map((book, idx) => (
-          <Box component="div">
-            <BookCard
-              key={`book-card-${idx}`}
-              title={book.title}
-              photo={book.photo}
-              author={book.author}
-              owner={book.owner}
-            />
-          </Box>
+          <BookCard
+            key={`book-card-${idx}`}
+            title={book.title}
+            photo={book.photo}
+            author={book.author}
+            owner={book.owner}
+            renderActions={
+              <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+                <Chip
+                  label={t("common.Edit")}
+                  icon={<Edit />}
+                  onClick={() => alert(13)}
+                  color="primary"
+                  variant="outlined"
+                />
+                <Chip
+                  label={t("common.Delete")}
+                  icon={<Delete />}
+                  onClick={() => alert(13)}
+                  color="error"
+                  variant="outlined"
+                />
+              </Stack>
+            }
+          />
         ))}
       </Box>
-      <Fab
-        ref={menuRef}
-        color="primary"
-        sx={{ position: "absolute", bottom: "24px", right: "24px" }}
-        onClick={() => setIsMenuOpen(true)}
-      >
-        <MenuIcon />
-      </Fab>
-      <Menu anchorEl={menuRef.current} open={isMenuOpen} onClose={() => setIsMenuOpen(false)}>
-        <p>test</p>
-        <p>test</p>
-        <p>test</p>
-      </Menu>
+      <ActionMenu />
     </Container>
   );
 };

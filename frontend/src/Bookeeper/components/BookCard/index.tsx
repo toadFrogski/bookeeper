@@ -1,15 +1,16 @@
 import { Box, BoxProps, Button, Typography } from "@mui/material";
 import styles from "./styles.module.scss";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
 type Props = BoxProps & {
   title: string;
   author: string;
   photo: string;
   owner: string;
+  renderActions: ReactNode;
 };
 
-const BookCard: FC<Props> = ({ title, author, photo, ...props }) => {
+const BookCard: FC<Props> = ({ title, author, photo, renderActions, ...props }) => {
   return (
     <Box {...props} className={styles.bookCard} component="div">
       <div className={styles.photoWrap}>
@@ -20,11 +21,11 @@ const BookCard: FC<Props> = ({ title, author, photo, ...props }) => {
           <Typography className={styles.text} variant="h5">
             {title}
           </Typography>
-          <Typography variant="caption" className={styles.text}>{author}</Typography>
+          <Typography variant="caption" className={styles.text}>
+            {author}
+          </Typography>
         </Box>
-        <Button variant="outlined" color="inherit" sx={{ mt: 1,  border: "2px solid"}}>
-          Inquire
-        </Button>
+        {renderActions}
       </div>
     </Box>
   );

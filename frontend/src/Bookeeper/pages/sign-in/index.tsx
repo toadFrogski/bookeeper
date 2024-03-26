@@ -21,12 +21,14 @@ import { useStateWithError } from "../../../utils/hooks";
 import { ErrorOutline } from "@mui/icons-material";
 import { AnyResponse } from "../../../services/api";
 import urls from "../../utils/urls";
+import { useTranslation } from "react-i18next";
 
 const SignIn: FC = () => {
   const { authApi } = useContext(ApiContext);
   const { setToken } = useContext(LoginContext);
   const { palette } = useTheme();
   const navigate = useNavigate();
+  const [t] = useTranslation();
 
   const email = useStateWithError("");
   const password = useStateWithError("");
@@ -51,61 +53,61 @@ const SignIn: FC = () => {
             const data = err.response.data as AnyResponse;
             switch (data.response_message) {
               case "USER_NOT_FOUND":
-                email.setError("Error.userNotFound");
+                email.setError("error.userNotFound");
                 break;
               case "INCORRECT_PASSWORD":
-                password.setError("Error.incorrectPassword");
+                password.setError("error.incorrectPassword");
                 break;
               default:
-                setCommonError("Error.unexpectedError");
+                setCommonError("error.unexpectedError");
                 break;
             }
-          } else setCommonError("Error.unexpectedError");
-        } else setCommonError("Error.unexpectedError");
+          } else setCommonError("error.unexpectedError");
+        } else setCommonError("error.unexpectedError");
       });
   };
 
   return (
     <Container maxWidth="sm">
-      <Box component="section" className={styles.loginForm} >
+      <Box component="section" className={styles.loginForm}>
         <Paper sx={{ padding: 5 }} elevation={3}>
-            {commonError != "" && (
-              <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
-                <ErrorOutline />
-                <Typography sx={{ ml: 1 }} variant="inherit">
-                  {commonError}
-                </Typography>
-              </Box>
-            )}
-            <FormControl sx={{ width: "100%" }}>
-              <TextField
-                error={email.error != ""}
-                variant="outlined"
-                value={email.value}
-                helperText={email.error}
-                onChange={(e) => {
-                  email.setValue(e.target.value);
-                }}
-                label="Email or username"
-              />
-            </FormControl>
-            <Password
-              sx={{ width: "100%", mt: 3 }}
-              password={password.value}
-              setPassword={(value) => password.setValue(value)}
-              error={password.error}
+          {commonError != "" && (
+            <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
+              <ErrorOutline />
+              <Typography sx={{ ml: 1 }} variant="inherit">
+                {commonError}
+              </Typography>
+            </Box>
+          )}
+          <FormControl sx={{ width: "100%" }}>
+            <TextField
+              error={email.error != ""}
+              variant="outlined"
+              value={email.value}
+              helperText={email.error}
+              onChange={(e) => {
+                email.setValue(e.target.value);
+              }}
+              label={t("signIn.email")}
             />
-            <MuiLink aria-disabled sx={{ mt: 2, display: "block" }} component={Link} to={urls.signUp}>
-              Sign up for an account
-            </MuiLink>
-            <Button
-              sx={{ width: "100%", mt: 3, minHeight: "56px" }}
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={email.value.length === 0 || password.value.length == 0}
-            >
-              Submit
-            </Button>
+          </FormControl>
+          <Password
+            sx={{ width: "100%", mt: 3 }}
+            password={password.value}
+            setPassword={(value) => password.setValue(value)}
+            error={password.error}
+          />
+          <MuiLink aria-disabled sx={{ mt: 2, display: "block" }} component={Link} to={urls.signUp}>
+            {t("signIn.signUpLink")}
+          </MuiLink>
+          <Button
+            sx={{ width: "100%", mt: 3, minHeight: "56px" }}
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={email.value.length === 0 || password.value.length == 0}
+          >
+            {t("signIn.signIn")}
+          </Button>
         </Paper>
       </Box>
     </Container>

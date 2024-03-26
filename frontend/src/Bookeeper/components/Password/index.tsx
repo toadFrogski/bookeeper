@@ -1,7 +1,8 @@
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { FormControl, FormControlProps, IconButton, InputAdornment, TextField } from "@mui/material";
-import {FC, useState } from "react";
+import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = Omit<FormControlProps, "error"> & {
   password: string;
@@ -9,8 +10,9 @@ type Props = Omit<FormControlProps, "error"> & {
   setPassword: (password: string) => void;
 };
 
-const Password: FC<Props> = ({ password, setPassword, error, ...props}: Props) => {
+const Password: FC<Props> = ({ password, setPassword, error, ...props }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [t] = useTranslation();
 
   return (
     <FormControl {...props}>
@@ -21,7 +23,7 @@ const Password: FC<Props> = ({ password, setPassword, error, ...props}: Props) =
         type={showPassword ? "text" : "password"}
         helperText={error}
         onChange={(e) => setPassword(e.target.value)}
-        label="Password"
+        label={t("common.password")}
         InputProps={{
           autoComplete: "new-password",
           endAdornment: (

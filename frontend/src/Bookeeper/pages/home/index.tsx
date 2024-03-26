@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { BookCard, SearchBar } from "../../components";
-import { Box, Container } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 type Book = {
   title: string;
@@ -115,6 +116,8 @@ const mock: Book[] = [
 ];
 
 const Home: FC = () => {
+  const [t] = useTranslation();
+
   return (
     <Container>
       <SearchBar sx={{ mt: 3 }} />
@@ -125,19 +128,22 @@ const Home: FC = () => {
           gap: "20px",
           mt: 3,
           gridTemplateColumns: "repeat(auto-fill, 200px)",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
         {mock.map((book, idx) => (
-          <Box component="div">
-            <BookCard
-              key={`book-card-${idx}`}
-              title={book.title}
-              photo={book.photo}
-              author={book.author}
-              owner={book.owner}
-            />
-          </Box>
+          <BookCard
+            key={`book-card-${idx}`}
+            title={book.title}
+            photo={book.photo}
+            author={book.author}
+            owner={book.owner}
+            renderActions={
+              <Button variant="outlined" color="inherit" sx={{ mt: 1, border: "2px solid" }}>
+                {t("home.inquire")}
+              </Button>
+            }
+          />
         ))}
       </Box>
     </Container>

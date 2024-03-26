@@ -20,6 +20,7 @@ import { isAxiosError } from "axios";
 import { NamedValidationErrors } from "../../../services/api";
 import { ErrorOutline } from "@mui/icons-material";
 import urls from "../../utils/urls";
+import { useTranslation } from "react-i18next";
 
 const atLeastMinimumLength = (password: string) => new RegExp(/(?=.{8,})/).test(password);
 const atLeastOneUppercaseLetter = (password: string) => new RegExp(/(?=.*?[A-Z])/).test(password);
@@ -32,6 +33,7 @@ const SignUp: FC = () => {
   const { setToken } = useContext(LoginContext);
   const { palette } = useTheme();
   const navigate = useNavigate();
+  const [t] = useTranslation();
 
   const email = useStateWithError("");
   const username = useStateWithError("");
@@ -58,21 +60,21 @@ const SignUp: FC = () => {
             switch (data.name) {
               case "email":
                 data.errors?.forEach((error) => {
-                  if (error.type === "invalid_email") email.setError("Error.invalidEmail");
-                  if (error.type === "existed_email") email.setError("Error.existedEmail");
+                  if (error.type === "invalid_email") email.setError("error.invalidEmail");
+                  if (error.type === "existed_email") email.setError("error.existedEmail");
                 });
                 break;
               case "username":
                 data.errors?.forEach((error) => {
-                  if (error.type === "existed_username") email.setError("Error.existedUsername");
+                  if (error.type === "existed_username") email.setError("error.existedUsername");
                 });
                 break;
               default:
-                setCommonError("Error.unexpectedError");
+                setCommonError("error.unexpectedError");
                 break;
             }
-          } else setCommonError("Error.unexpectedError");
-        } else setCommonError("Error.unexpectedError");
+          } else setCommonError("error.unexpectedError");
+        } else setCommonError("error.unexpectedError");
       });
   };
 
@@ -109,7 +111,7 @@ const SignUp: FC = () => {
               onChange={(e) => {
                 email.setValue(e.target.value);
               }}
-              label="Email"
+              label={t("common.email")}
             />
           </FormControl>
           <FormControl sx={{ width: "100%", mt: 2 }}>
@@ -121,7 +123,7 @@ const SignUp: FC = () => {
               onChange={(e) => {
                 username.setValue(e.target.value);
               }}
-              label="Username"
+              label={t("common.username")}
             />
           </FormControl>
           <Password
@@ -140,7 +142,7 @@ const SignUp: FC = () => {
             showStatus={password.value.length > 2}
           />
           <MuiLink aria-disabled sx={{ mt: 2, display: "block" }} component={Link} to={urls.signIn}>
-            Do you already have an account?
+            {t("signUp.signInLink")}
           </MuiLink>
           <Button
             sx={{ width: "100%", mt: 3, minHeight: "56px" }}
@@ -148,7 +150,7 @@ const SignUp: FC = () => {
             onClick={handleSubmit}
             disabled={email.value.length === 0 || username.value.length === 0 || passwordStrength < 50}
           >
-            Submit
+            {t("signUp.signUp")}
           </Button>
         </Paper>
       </Box>
