@@ -1,8 +1,9 @@
-import { Box, Chip, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Popover, Typography } from "@mui/material";
 import { FC } from "react";
-import { ActionMenu, BookCard } from "../../components";
+import { ActionMenu, BookActionsMenu, BookCard } from "../../components";
 import { Edit, Delete } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import styles from "./styles.module.scss";
 
 type Book = {
   title: string;
@@ -35,19 +36,11 @@ const mock: Book[] = [
 const Profile: FC = () => {
   const [t] = useTranslation();
 
+
   return (
     <Container sx={{ mt: 5 }}>
       <Typography variant="h5">My books</Typography>
-      <Box
-        component="section"
-        sx={{
-          display: "grid",
-          gap: "20px",
-          mt: 3,
-          gridTemplateColumns: "repeat(auto-fit, 200px)",
-          justifyContent: "space-between",
-        }}
-      >
+      <Box component="section" className={styles.bookContainer} sx={{ mt: 3 }}>
         {mock.map((book, idx) => (
           <BookCard
             key={`book-card-${idx}`}
@@ -56,22 +49,7 @@ const Profile: FC = () => {
             author={book.author}
             owner={book.owner}
             renderActions={
-              <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                <Chip
-                  label={t("common.Edit")}
-                  icon={<Edit />}
-                  onClick={() => alert(13)}
-                  color="primary"
-                  variant="outlined"
-                />
-                <Chip
-                  label={t("common.Delete")}
-                  icon={<Delete />}
-                  onClick={() => alert(13)}
-                  color="error"
-                  variant="outlined"
-                />
-              </Stack>
+              <BookActionsMenu bookID={""} />
             }
           />
         ))}

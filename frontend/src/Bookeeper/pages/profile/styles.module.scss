@@ -1,0 +1,9 @@
+.bookContainer {
+
+  @media screen and (min-width: 451px) {
+    display: grid;
+    gap: 10px;
+    justify-content: space-around;
+    grid-template-columns: repeat(auto-fill, 200px);
+  }
+}

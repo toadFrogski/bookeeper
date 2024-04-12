@@ -5,5 +5,6 @@ import PrivateRoute from "./PrivateRoute";
 import BookCard from "./BookCard";
 import SearchBar from "./Search";
 import ActionMenu from "./ActionMenu";
+import BookActionsMenu from "./BookActionsMenu";
 
-export { PasswordLine, Password, Header, PrivateRoute, BookCard, SearchBar, ActionMenu };
+export { PasswordLine, Password, Header, PrivateRoute, BookCard, SearchBar, ActionMenu, BookActionsMenu };

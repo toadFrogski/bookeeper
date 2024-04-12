@@ -75,7 +75,7 @@ const SignIn: FC = () => {
             <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
               <ErrorOutline />
               <Typography sx={{ ml: 1 }} variant="inherit">
-                {commonError}
+                {t(commonError)}
               </Typography>
             </Box>
           )}

@@ -2,6 +2,7 @@ import { FC } from "react";
 import { BookCard, SearchBar } from "../../components";
 import { Box, Button, Container } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import styles from "./styles.module.scss";
 
 type Book = {
   title: string;
@@ -123,16 +124,16 @@ const Home: FC = () => {
       <SearchBar sx={{ mt: 3 }} />
       <Box
         component="section"
+        className={styles.bookContainer}
         sx={{
-          display: "grid",
-          gap: "20px",
           mt: 3,
-          gridTemplateColumns: "repeat(auto-fill, 200px)",
-          justifyContent: "space-between",
         }}
       >
         {mock.map((book, idx) => (
           <BookCard
+            sx={{
+              mb: 2,
+            }}
             key={`book-card-${idx}`}
             title={book.title}
             photo={book.photo}

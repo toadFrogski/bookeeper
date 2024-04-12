@@ -2,11 +2,10 @@
   display: block;
   border: 2px solid;
   border-radius: 4px;
-  width: 200px;
+  min-width: 200px;
 
   @media screen and (max-width: 450px) {
     display: flex;
-    width: calc(100vw - 20px);
   }
 
   .photoWrap {
@@ -17,10 +16,6 @@
     border-radius: 4px;
     overflow: hidden;
     margin: 5px;
-
-    @media screen and (max-width: 450px) {
-      min-width: 40vw;
-    }
 
     .photo {
       width: 100%;

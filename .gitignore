@@ -4,8 +4,10 @@
 #Docker
 docker-compose.override.yml
 
-# Golang tools
+# Golang
 wire_gen.go
+__debug*
+
 docs
 
 # Data directories
