@@ -1,36 +1,23 @@
-import { Button, List, ListItem, Popover, SxProps } from "@mui/material";
-import { FC, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Brush, Delete } from "@mui/icons-material";
+import { Box, Fab, SxProps } from "@mui/material";
+import { FC } from "react";
 
 type Props = {
-  bookID: number | string;
+  onDelete: () => void;
+  onEdit: () => void;
   sx?: SxProps;
 };
 
-const BookActionsMenu: FC<Props> = ({ bookID, sx }) => {
-  const [t] = useTranslation();
-  const [open, setOpen] = useState(false);
-  const buttonRef = useRef();
-
+const BookActionsMenu: FC<Props> = ({ onDelete, onEdit, sx }) => {
   return (
-    <>
-      <Button ref={buttonRef} sx={sx} color="inherit" variant="outlined" onClick={() => setOpen(true)}>
-        test
-      </Button>
-      <Popover
-        anchorEl={buttonRef.current}
-        open={open}
-        onClose={() => setOpen(false)}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <List>
-          <ListItem>{t("common.edit")}</ListItem>
-        </List>
-      </Popover>
-    </>
+    <Box component="div" sx={{ ...sx, justifyContent: "space-around", display: "flex", userSelect: "none" }}>
+      <Fab size="small" onClick={() => onEdit()}>
+        <Brush />
+      </Fab>
+      <Fab size="small" sx={{ display: "inline-flex" }} onClick={() => onDelete()}>
+        <Delete />
+      </Fab>
+    </Box>
   );
 };
 

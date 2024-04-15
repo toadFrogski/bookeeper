@@ -22,10 +22,9 @@ const App: FC = () => {
     <ApiProvider>
       <ThemeProvider theme={mode}>
         <Routes>
-          <Route path={urls.home} element={<Header />} />
-          <Route path={urls.profile} element={<Header />} />
           <Route path={urls.signIn} element={<Header disableSign />} />
           <Route path={urls.signUp} element={<Header disableSign />} />
+          <Route path="*" element={<Header />} />
         </Routes>
         <Routes>
           <Route element={<PrivateRoute />}>

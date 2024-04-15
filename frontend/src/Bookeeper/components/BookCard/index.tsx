@@ -1,4 +1,4 @@
-import { Box, BoxProps, Button, Typography } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
 import styles from "./styles.module.scss";
 import { FC, ReactNode } from "react";
 

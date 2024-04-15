@@ -14,7 +14,7 @@
     "delete": "Delete",
     "submit": "Submit",
     "username": "Username",
-    "email": "Email,"
+    "email": "Email"
   },
   "error": {
     "unexpectedError": "Unexpected error",

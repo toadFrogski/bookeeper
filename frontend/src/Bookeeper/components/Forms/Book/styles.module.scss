@@ -1,0 +1,39 @@
+.formContainer {
+  display: flex;
+  gap: 10px;
+
+  * {
+    flex: 1;
+  }
+
+  .imageContainer {
+    max-height: 600px;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+  }
+
+  @media screen and (max-width: 650px) {
+    display: block;
+
+    .imageContainer {
+      max-height: 350px;
+      overflow: hidden;
+      border-radius: 4px;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .infoContainer {
+      margin-top: 1em;
+    }
+  }
+}
