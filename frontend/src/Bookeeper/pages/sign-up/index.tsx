@@ -1,24 +1,13 @@
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  Paper,
-  TextField,
-  Typography,
-  useTheme,
-  Link as MuiLink,
-} from "@mui/material";
+import { Box, Button, Container, FormControl, Paper, TextField, Link as MuiLink } from "@mui/material";
 import { FC, MouseEventHandler, useContext, useState } from "react";
 import styles from "./styles.module.scss";
 import { ApiContext } from "../../contexts/api";
 import { LoginContext } from "../../../contexts/login";
-import { Password, PasswordLine } from "../../components";
+import { CommonErrorBox, Password, PasswordLine } from "../../components";
 import { Link, useNavigate } from "react-router-dom";
 import { useStateWithError } from "../../../utils/hooks";
 import { isAxiosError } from "axios";
 import { NamedValidationErrors } from "../../../services/api";
-import { ErrorOutline } from "@mui/icons-material";
 import urls from "../../utils/urls";
 import { useTranslation } from "react-i18next";
 
@@ -31,7 +20,6 @@ const atLeastOneSpecialChar = (password: string) => new RegExp(/(?=.*?[#?!@$ %^&
 const SignUp: FC = () => {
   const { authApi } = useContext(ApiContext);
   const { setToken } = useContext(LoginContext);
-  const { palette } = useTheme();
   const navigate = useNavigate();
   const [t] = useTranslation();
 
@@ -94,14 +82,7 @@ const SignUp: FC = () => {
     <Container maxWidth="sm">
       <Box component="section" className={styles.registerForm}>
         <Paper sx={{ padding: 5 }} elevation={3}>
-          {commonError != "" && (
-            <Box sx={{ mb: 5, display: "flex", color: palette.error.main }}>
-              <ErrorOutline />
-              <Typography sx={{ ml: 1 }} variant="inherit">
-                {commonError}
-              </Typography>
-            </Box>
-          )}
+          {commonError != "" && <CommonErrorBox message={t(commonError)} />}
           <FormControl sx={{ width: "100%" }}>
             <TextField
               error={email.error != ""}

@@ -7,13 +7,51 @@
   }
 
   .imageContainer {
-    max-height: 600px;
+    display: flex;
 
     img {
-      height: 100%;
       width: 100%;
       object-fit: cover;
-      border-radius: 4px;
+      // object-position: center center;
+    }
+  }
+  .activeDropzone {
+    position: relative;
+    padding: 10px;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 2px solid gold;
+      animation: rotate 3s infinite linear;
+    }
+  }
+
+  @keyframes rotate {
+    0%,
+    100% {
+      clip-path: inset(0 0 95% 0);
+    }
+    25% {
+      clip-path: inset(0 95% 0 0);
+    }
+    50% {
+      clip-path: inset(95% 0 0 0);
+    }
+    75% {
+      clip-path: inset(0 0 0 95%);
+    }
+  }
+
+  @media screen and (min-width: 650px) {
+    min-height: 300px;
+
+    .imageContainer {
+      max-height: 400px;
     }
   }
 
@@ -21,15 +59,9 @@
     display: block;
 
     .imageContainer {
-      max-height: 350px;
+      height: 300px;
       overflow: hidden;
       border-radius: 4px;
-
-      img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-      }
     }
 
     .infoContainer {

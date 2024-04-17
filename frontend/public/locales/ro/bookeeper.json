@@ -1,1 +1,42 @@
-{}
+{
+  "common": {
+    "actionMenu": "Action menu",
+    "addBook": "Add book",
+    "seeNotifications": "See notifications",
+    "profile": "Profile",
+    "login": "Sign in",
+    "logout": "Sign out",
+    "password": "Password",
+    "strongPassword": "Strong password",
+    "mediumPassword": "Medium password",
+    "weakPassword": "Password too weak",
+    "edit": "Edit",
+    "delete": "Delete",
+    "submit": "Submit",
+    "save": "Save",
+    "username": "Username",
+    "email": "Email"
+  },
+  "error": {
+    "unexpectedError": "Unexpected error",
+    "userNotFound": "User not found",
+    "incorrectPassword": "Incorrect password",
+    "invalidEmail": "Invalid email",
+    "existedEmail": "Email already registered. Try sign in",
+    "existedUsername": "Username is already taken",
+    "dataNotFound": "Data not found",
+    "bookNotFound": "Book not found"
+  },
+  "home": {
+    "inquire": "Inquire"
+  },
+  "signIn": {
+    "signUpLink": "Sign up for an account",
+    "email": "Email or username",
+    "signIn": "Sign in"
+  },
+  "signUp": {
+    "signInLink": "Do you already have an account? Sign in",
+    "signUp": "Sign up"
+  }
+}
