@@ -7,12 +7,9 @@ import (
 	p "bookeeper/utils/paginator"
 	"bookeeper/utils/panic"
 	"errors"
-	"fmt"
-	"html"
 	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"time"
 
@@ -76,9 +73,8 @@ func (bs BookService) SaveBook(c *gin.Context) {
 	user = claims.(*domain.User)
 
 	fpath := filepath.Join(time.Now().Format("20060102"),
-		string(saveBookForm.UserID)+
-			string(time.Now().Unix())+
-			html.EscapeString(saveBookForm.Photo.Filename),
+		strconv.FormatUint(uint64(user.ID), 10),
+		strconv.FormatInt(time.Now().Unix(), 10),
 	)
 
 	book := domain.Book{
@@ -144,11 +140,22 @@ func (bs BookService) DeleteBookByID(c *gin.Context) {
 	}
 }
 
-func validateSaveBookForm(form *SaveBookForm) error {
-	fileType := form.Photo.Header.Get("Content-Type")
-	if ok, _ := regexp.MatchString("image/*", fileType); !ok {
-		return fmt.Errorf("Uploaded file is not image")
+func (bs BookService) GetBooksByUserID(c *gin.Context, userID uint) {
+	var booksPointers []*domain.Book
+	var books []domain.Book
+
+	booksPointers, err := bs.BookRepo.GetAllUserBooks(userID)
+	if err != nil {
+		panic.PanicException(constants.InternalError)
 	}
 
-	return nil
+	if len(booksPointers) == 0 {
+		panic.PanicException(constants.DataNotFound)
+	}
+
+	for _, bookPtr := range booksPointers {
+		books = append(books, *bookPtr)
+	}
+
+	c.JSON(http.StatusOK, dto.BuildResponse[[]domain.Book](constants.Success, books))
 }

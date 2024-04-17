@@ -13,7 +13,8 @@ const SOCKET_PATH = "/var/run/www.sock"
 
 // @title Bookeeper backend API
 // @version 1.0
-//
+// @host      localhost:80
+// @schemes http https
 // @BasePath /v1
 func main() {
 	r := gin.Default()

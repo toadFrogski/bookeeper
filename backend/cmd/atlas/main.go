@@ -16,6 +16,7 @@ var models = []any{
 	&domain.Book{},
 	&domain.Role{},
 	&domain.Permission{},
+	&domain.Checkout{},
 }
 
 func main() {

@@ -1,14 +1,13 @@
 import { FC, useContext, useEffect, useState } from "react";
 import Forms from "../../components/Forms";
 import { AnyResponse, Book } from "../../../services/api";
-import { Alert, Button, Container, Snackbar } from "@mui/material";
+import { Button, Container } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { ApiContext } from "../../contexts/api";
 import { isAxiosError } from "axios";
 import { useStateWithError } from "../../../utils/hooks";
-
-// @TODO: Add notification types with style
+import { Notifier, NotifierMessage } from "../../components";
 
 const ProfileEditBook: FC = () => {
   const [t] = useTranslation();
@@ -16,11 +15,13 @@ const ProfileEditBook: FC = () => {
   const { bookApi } = useContext(ApiContext);
 
   const book = useStateWithError<Book>({});
-  const [isNotifierOpen, setIsNotifierOpen] = useState(false);
+  const [notifyMessage, setNotifyMessage] = useState<NotifierMessage>(null);
 
   useEffect(() => {
-    book.error !== "" ? setIsNotifierOpen(true) : setIsNotifierOpen(false);
-  }, [book.error]);
+    if (book.error !== "") {
+      setNotifyMessage({ type: "error", message: t(book.error) });
+    }
+  }, [book.error, t]);
 
   useEffect(() => {
     bookApi
@@ -47,6 +48,8 @@ const ProfileEditBook: FC = () => {
       });
   }, []);
 
+  const handleSaveBook = () => {};
+
   return (
     <>
       <Forms.BookForm
@@ -57,6 +60,11 @@ const ProfileEditBook: FC = () => {
             return { ...book, name: value };
           })
         }
+        onAuthorChange={(value) =>
+          book.setValue((book) => {
+            return { ...book, author: value };
+          })
+        }
         onDescriptionChange={(value) =>
           book.setValue((book) => {
             return { ...book, description: value };
@@ -64,15 +72,11 @@ const ProfileEditBook: FC = () => {
         }
       />
       <Container maxWidth="md">
-        <Button fullWidth variant="contained">
+        <Button fullWidth variant="contained" onClick={handleSaveBook}>
           {t("common.save")}
         </Button>
       </Container>
-      <Snackbar open={isNotifierOpen} autoHideDuration={2000} onClose={() => setIsNotifierOpen(false)}>
-        <Alert severity="success" variant="filled">
-          Test
-        </Alert>
-      </Snackbar>
+      <Notifier message={notifyMessage} alertProps={{ variant: "filled" }} />
     </>
   );
 };

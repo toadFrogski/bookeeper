@@ -42,7 +42,6 @@ const SignUp: FC = () => {
       })
       .catch((err) => {
         if (isAxiosError(err)) {
-          console.log(err);
           if (err.response && err.response.data.response_message === "INVALID_REQUEST") {
             const data: NamedValidationErrors = err.response.data.data;
             switch (data.name) {

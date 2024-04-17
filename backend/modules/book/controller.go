@@ -2,8 +2,11 @@ package book
 
 import (
 	"bookeeper/domain"
+	"bookeeper/utils/constants"
 	_ "bookeeper/utils/dto"
 	_ "bookeeper/utils/paginator"
+	"bookeeper/utils/panic"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,11 +37,13 @@ func (bc BookController) GetBookList(c *gin.Context) {
 // @Tags book
 // @Accept mpfd
 // @Produce json
-// @Param image formData file true "Image to be uploaded"
+// @Param photo formData file true "Image to be uploaded"
 // @Param name formData string true "Name of book"
+// @Param author formData string true "Book author"
+// @Param description formData string true "Description of book"
 // @Success 200 {object} AnyResponse
-// @Failude 400 {object} AnyResponse
-// @Failude 500 {object} AnyResponse
+// @Failure 400 {object} AnyResponse
+// @Failure 500 {object} AnyResponse
 // @Router /book/save [post]
 func (bc BookController) SaveBook(c *gin.Context) {
 	bc.BookSvc.SaveBook(c)
@@ -49,15 +54,15 @@ func (bc BookController) SaveBook(c *gin.Context) {
 // @Tags book
 // @Param book_id path int true "Book ID"
 // @Success 200 {object} BookResponse
-// @Failude 400 {object} AnyResponse
-// @Failude 500 {object} AnyResponse
+// @Failure 400 {object} AnyResponse
+// @Failure 500 {object} AnyResponse
 // @Router /book/{book_id} [get]
 func (bc BookController) GetBook(c *gin.Context) {
 	bc.BookSvc.GetBook(c)
 }
 
 // DeleteBook godoc
-// @Summmary Delete book by ID
+// @Summary Delete book by ID
 // @Tags book
 // @Param book_id path int true "Book ID"
 // @Success 200 {object} AnyResponse
@@ -65,4 +70,43 @@ func (bc BookController) GetBook(c *gin.Context) {
 // @Router /book/{book_id} [delete]
 func (bc BookController) DeleteBookByID(c *gin.Context) {
 	bc.BookSvc.DeleteBookByID(c)
+}
+
+// GetAllUserBooks godoc
+// @Summary Get all user books by user ID
+// @Tags book
+// @Param user_id path int true "User ID"
+// @Success 200 {object} BooksResponse
+// @Failure 400 {object} AnyResponse
+// @Failure 500 {object} AnyResponse
+// @Router /book/user/{user_id} [get]
+func (bc BookController) GetBooksByUserID(c *gin.Context) {
+	param, err := strconv.Atoi(c.Param("user_id"))
+	if err != nil {
+		panic.PanicException(constants.InternalError)
+
+	}
+
+	userID := uint(param)
+
+	bc.BookSvc.GetBooksByUserID(c, userID)
+}
+
+// GetAllUserBooks godoc
+// @Summary Get all user books by user ID
+// @Tags book
+// @Success 200 {object} BooksResponse
+// @Failure 400 {object} AnyResponse
+// @Failure 500 {object} AnyResponse
+// @Router /book/user/me [get]
+func (bc BookController) GetBooksBySelf(c *gin.Context) {
+	var user *domain.User
+
+	vars, exist := c.Get("user")
+	if !exist {
+		panic.PanicException(constants.InternalError)
+	}
+	user = vars.(*domain.User)
+
+	bc.BookSvc.GetBooksByUserID(c, user.ID)
 }

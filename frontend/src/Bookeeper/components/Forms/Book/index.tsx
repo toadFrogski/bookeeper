@@ -7,12 +7,13 @@ import { Image } from "@mui/icons-material";
 
 type Props = ContainerProps & {
   book: Book;
+  onAuthorChange: (value: string) => void;
   onTitleChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
   onPhotoChange: (file: File) => void;
 };
 
-const BookForm: FC<Props> = ({ book, onTitleChange, onDescriptionChange, onPhotoChange, ...props }) => {
+const BookForm: FC<Props> = ({ book, onTitleChange, onDescriptionChange, onPhotoChange, onAuthorChange, ...props }) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/png": [".png"],
@@ -74,6 +75,17 @@ const BookForm: FC<Props> = ({ book, onTitleChange, onDescriptionChange, onPhoto
                 onChange={(e) => onTitleChange(e.target.value)}
                 InputProps={{
                   style: { fontSize: 24 },
+                  disableUnderline: true,
+                }}
+              />
+            </FormControl>
+            <FormControl variant="standard">
+              <TextField
+                variant="standard"
+                placeholder="Book title"
+                value={book.author}
+                onChange={(e) => onAuthorChange(e.target.value)}
+                InputProps={{
                   disableUnderline: true,
                 }}
               />

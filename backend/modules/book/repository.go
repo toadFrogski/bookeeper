@@ -65,3 +65,12 @@ func (br BookRepository) GetUserBookByID(ID string) (*domain.Book, error) {
 
 	return &book, nil
 }
+
+func (br BookRepository) GetAllUserBooks(userID uint) ([]*domain.Book, error) {
+	var books []*domain.Book
+
+	if err := br.db.Model(domain.Book{}).Where("user_id = ?", userID).Find(&books).Error; err != nil {
+		return nil, err
+	}
+	return books, nil
+}

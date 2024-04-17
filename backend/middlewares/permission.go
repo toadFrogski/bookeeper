@@ -4,7 +4,6 @@ import (
 	"bookeeper/domain"
 	"bookeeper/utils/constants"
 	"bookeeper/utils/dto"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,8 +19,6 @@ func RoleAccessMiddleware(accessRoles []constants.Role) gin.HandlerFunc {
 			return
 		}
 		user = vars.(*domain.User)
-		fmt.Printf("%x", user)
-		// userRoles := user.Roles
 
 		for _, accessRole := range accessRoles {
 			for _, userRole := range user.Roles {
@@ -32,7 +29,7 @@ func RoleAccessMiddleware(accessRoles []constants.Role) gin.HandlerFunc {
 			}
 		}
 
-		c.JSON(http.StatusForbidden, dto.BuildResponse[any](constants.Unauthorized, nil))
+		c.JSON(http.StatusForbidden, dto.BuildResponse[any](constants.PermissionDenied, nil))
 		c.Abort()
 	}
 }

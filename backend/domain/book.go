@@ -22,6 +22,8 @@ type (
 		GetBookList(c *gin.Context)
 		SaveBook(c *gin.Context)
 		DeleteBookByID(c *gin.Context)
+		GetBooksByUserID(c *gin.Context)
+		GetBooksBySelf(c *gin.Context)
 	}
 
 	IBookService interface {
@@ -29,6 +31,7 @@ type (
 		GetBookList(c *gin.Context)
 		SaveBook(c *gin.Context)
 		DeleteBookByID(c *gin.Context)
+		GetBooksByUserID(c *gin.Context, userID uint)
 	}
 
 	IBookRepository interface {
@@ -37,5 +40,6 @@ type (
 		DeleteBook(book *Book) error
 		DeleteBookByID(ID string) error
 		GetUserBookByID(ID string) (*Book, error)
+		GetAllUserBooks(ID uint) ([]*Book, error)
 	}
 )

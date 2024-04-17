@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode, useCallback, useEffect, useState } from "react";
+import { FC, PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import Context from "./Context";
 import { Auth } from "../../services/api";
 
@@ -10,11 +10,10 @@ const Provider: FC<Props> = ({ children, fallback }) => {
   const [token, setToken] = useState<Auth>({ token: "" });
   const [isLoading, setIsLoading] = useState(true);
 
-  const logout = useCallback(() => {
+  const logout = () => {
     setToken({ token: "" });
     localStorage.removeItem("accessToken");
-    // navigate("/")
-  }, []);
+  };
 
   const setSessionToken = (token: Auth) => {
     setToken(token);
@@ -35,7 +34,7 @@ const Provider: FC<Props> = ({ children, fallback }) => {
       }
       setIsLoading(false);
     })();
-  }, [logout]);
+  }, []);
 
   return (
     <Context.Provider

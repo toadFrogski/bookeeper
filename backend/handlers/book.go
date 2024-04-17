@@ -22,6 +22,12 @@ func GetBooksRoutes(r gin.IRouter) gin.IRouter {
 		bookRouter.DELETE(":bookID",
 			m.RoleAccessMiddleware([]c.Role{c.Admin, c.User}),
 			bookAPI.DeleteBookByID)
+		bookRouter.GET("/user/me",
+			m.RoleAccessMiddleware([]c.Role{c.Admin, c.User}),
+			bookAPI.GetBooksBySelf)
+		bookRouter.GET("/user/:userID",
+			m.RoleAccessMiddleware([]c.Role{c.Admin, c.User}),
+			bookAPI.GetBooksByUserID)
 	}
 
 	return r
