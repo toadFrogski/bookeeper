@@ -2,6 +2,8 @@ import { Box, BoxProps, Typography } from "@mui/material";
 import styles from "./styles.module.scss";
 import { FC, ReactNode } from "react";
 
+const MEDIA_PATH = import.meta.env.VITE_MEDIA_DIRECTORY
+
 type Props = BoxProps & {
   title: string;
   author: string;
@@ -14,7 +16,7 @@ const BookCard: FC<Props> = ({ title, author, photo, renderActions, ...props }) 
   return (
     <Box {...props} className={styles.bookCard} component="div">
       <div className={styles.photoWrap}>
-        <img className={styles.photo} src={photo} alt="book-image" />
+        <img className={styles.photo} src={`/${MEDIA_PATH}/${photo}`} alt="book-image" />
       </div>
       <div className={styles.infoWrap}>
         <Box component="div" sx={{ flex: 1 }}>

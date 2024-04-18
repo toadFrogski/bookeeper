@@ -12,6 +12,7 @@ func GetAuthRoutes(r gin.IRouter) gin.IRouter {
 
 	r.POST("/register", userAPI.Register)
 	r.POST("/login", userAPI.Login)
+	r.POST("/refresh", userAPI.Refresh)
 
 	return r
 }

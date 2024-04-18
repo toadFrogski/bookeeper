@@ -5,6 +5,8 @@ import styles from "./styles.module.scss";
 import { useDropzone } from "react-dropzone";
 import { Image } from "@mui/icons-material";
 
+const MEDIA_PATH = import.meta.env.VITE_MEDIA_DIRECTORY;
+
 type Props = ContainerProps & {
   book: Book;
   onAuthorChange: (value: string) => void;
@@ -44,7 +46,7 @@ const BookForm: FC<Props> = ({ book, onTitleChange, onDescriptionChange, onPhoto
             {book.photo || preview ? (
               <>
                 <img
-                  src={preview ? preview : book.photo}
+                  src={preview ? preview : `/${MEDIA_PATH}/${book.photo}`}
                   style={{ display: imageLoaded ? "block" : "none" }}
                   onDragLeave={() => setIsDragOver(false)}
                   onDrop={() => setIsDragOver(false)}
@@ -79,10 +81,10 @@ const BookForm: FC<Props> = ({ book, onTitleChange, onDescriptionChange, onPhoto
                 }}
               />
             </FormControl>
-            <FormControl variant="standard">
+            <FormControl variant="standard" sx={{ height: "43px" }}>
               <TextField
                 variant="standard"
-                placeholder="Book title"
+                placeholder="Author"
                 value={book.author}
                 onChange={(e) => onAuthorChange(e.target.value)}
                 InputProps={{

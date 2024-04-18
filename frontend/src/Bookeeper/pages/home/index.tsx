@@ -1,123 +1,24 @@
-import { FC } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { BookCard, SearchBar } from "../../components";
 import { Box, Button, Container } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import styles from "./styles.module.scss";
-
-type Book = {
-  title: string;
-  photo: string;
-  author: string;
-  owner: string;
-};
-
-const mock: Book[] = [
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-  {
-    title: "Little Prince",
-    photo: "https://m.media-amazon.com/images/I/71QKDKxL-jL._AC_UF1000,1000_QL80_.jpg",
-    author: "antuan de saint exupery",
-    owner: "cutegr49@gmail.com",
-  },
-];
+import { ApiContext } from "../../contexts/api";
+import { BookPaginator } from "../../../services/api";
 
 const Home: FC = () => {
+  const { bookApi } = useContext(ApiContext);
   const [t] = useTranslation();
+
+  const [books, setBooks] = useState<BookPaginator>();
+
+  useEffect(() => {
+    bookApi.bookGet().then((res) => {
+      if (res.data.data) {
+        setBooks(res.data.data);
+      }
+    });
+  }, []);
 
   return (
     <Container>
@@ -129,16 +30,16 @@ const Home: FC = () => {
           mt: 3,
         }}
       >
-        {mock.map((book, idx) => (
+        {books?.content?.map((book, idx) => (
           <BookCard
             sx={{
               mb: 2,
             }}
             key={`book-card-${idx}`}
-            title={book.title}
-            photo={book.photo}
-            author={book.author}
-            owner={book.owner}
+            title={book.name ?? ""}
+            photo={book.photo ?? ""}
+            author={book.author ?? ""}
+            owner={book.user?.email ?? ""}
             renderActions={
               <Button variant="outlined" color="inherit" sx={{ mt: 1, border: "2px solid" }}>
                 {t("home.inquire")}

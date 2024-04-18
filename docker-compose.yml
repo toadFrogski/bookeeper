@@ -11,7 +11,7 @@ services:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./frontend/build:/var/www/frontend
-      - ./media:/media:ro
+      - ./media:/media
       - backend_sock:/var/run/backend
 
   backend:

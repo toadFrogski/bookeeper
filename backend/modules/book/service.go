@@ -52,17 +52,52 @@ func (bs BookService) GetBookList(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.BuildResponse[p.Paginator[[]*domain.Book]](constants.Success, paginator))
 }
 
-func (bs BookService) SaveBook(c *gin.Context) {
-	var saveBookForm SaveBookForm
-	var user *domain.User
+func (bs BookService) UpdateBook(c *gin.Context) {
+	var form OptionalBookForm
+	var book *domain.Book
 
-	media := os.Getenv("MEDIA_DIRECTORY")
+	bookID := c.Param("book_id")
+
+	if err := c.ShouldBind(&form); err != nil {
+		panic.PanicWithMessage(constants.InvalidRequest, err.Error())
+	}
+
+	book, err := bs.BookRepo.GetBookByID(bookID)
+	if err != nil {
+		panic.PanicException(constants.InternalError)
+	}
+
+	if form.Name != book.Name {
+		book.Name = form.Name
+	}
+	if form.Description != book.Description {
+		book.Description = form.Description
+	}
+	if form.Author != book.Author {
+		book.Author = form.Author
+	}
+	if form.Photo != nil {
+		media := os.Getenv("MEDIA_DIRECTORY")
+		fpath := filepath.Join(media, book.Photo)
+		c.SaveUploadedFile(form.Photo, fpath)
+	}
+
+	if err := bs.BookRepo.UpdateBook(book); err != nil {
+		panic.PanicException(constants.InternalError)
+	}
+
+	c.JSON(http.StatusOK, dto.BuildResponse[any](constants.Success, nil))
+}
+
+func (bs BookService) SaveBook(c *gin.Context) {
+	var saveBookForm BookForm
+	var user *domain.User
 
 	if err := c.ShouldBind(&saveBookForm); err != nil {
 		panic.PanicWithMessage(constants.InvalidRequest, err.Error())
 	}
 
-	if err := validateSaveBookForm(&saveBookForm); err != nil {
+	if err := validateBookForm(&saveBookForm); err != nil {
 		panic.PanicWithMessage(constants.InvalidRequest, err.Error())
 	}
 
@@ -89,6 +124,8 @@ func (bs BookService) SaveBook(c *gin.Context) {
 		panic.PanicException(constants.InternalError)
 	}
 
+	media := os.Getenv("MEDIA_DIRECTORY")
+
 	fpath = filepath.Join(media, fpath)
 	c.SaveUploadedFile(saveBookForm.Photo, fpath)
 }
@@ -96,7 +133,7 @@ func (bs BookService) SaveBook(c *gin.Context) {
 func (bs BookService) GetBook(c *gin.Context) {
 	var book *domain.Book
 
-	book, err := bs.BookRepo.GetUserBookByID(c.Param("bookID"))
+	book, err := bs.BookRepo.GetBookByID(c.Param("bookID"))
 	if err != nil {
 		panic.PanicException(constants.DataNotFound)
 	}
@@ -116,12 +153,12 @@ func (bs BookService) DeleteBookByID(c *gin.Context) {
 	}
 	user = vars.(*domain.User)
 
-	book, err := bs.BookRepo.GetUserBookByID(c.Param("bookID"))
+	book, err := bs.BookRepo.GetBookByID(c.Param("bookID"))
 	if err != nil {
 		panic.PanicException(constants.InvalidRequest)
 	}
 
-	canDelete := user.ID == book.ID
+	canDelete := user.ID == book.UserID
 	for _, userRole := range user.Roles {
 		canDelete = canDelete || userRole.Name == constants.Admin
 	}

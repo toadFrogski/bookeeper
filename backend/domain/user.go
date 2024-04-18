@@ -12,7 +12,7 @@ import (
 
 type (
 	User struct {
-		ID          uint    `gorm:"primarykey"`
+		ID          uint    `gorm:"primarykey" json:"ID"`
 		Username    string  `gorm:"column:username;uniqueIndex" json:"username"`
 		Password    string  `gorm:"password;" json:"-"`
 		Email       string  `gorm:"column:email;uniqueIndex" json:"email"`
@@ -25,6 +25,7 @@ type (
 	IUserController interface {
 		Register(c *gin.Context)
 		Login(c *gin.Context)
+		Refresh(c *gin.Context)
 		GetUserInfo(c *gin.Context)
 		GetUserInfoByID(c *gin.Context)
 	}
@@ -32,7 +33,7 @@ type (
 	IUserService interface {
 		Register(c *gin.Context)
 		Login(c *gin.Context)
-		GetUserInfo(c *gin.Context, userID uint)
+		GetUserInfo(userID uint) *User
 	}
 
 	IUserRepository interface {

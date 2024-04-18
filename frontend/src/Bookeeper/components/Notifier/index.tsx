@@ -1,6 +1,7 @@
 import { Close } from "@mui/icons-material";
 import { Alert, AlertProps, IconButton, Snackbar, SnackbarProps } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
+import { NotificationContext } from "../../contexts/notification";
 
 export type NotifierMessage = {
   type: "success" | "info" | "warning" | "error";
@@ -8,28 +9,28 @@ export type NotifierMessage = {
 } | null;
 
 type Props = {
-  message: NotifierMessage;
   alertProps?: AlertProps;
   snackbarProps?: SnackbarProps;
 };
 
-const Notifier: FC<Props> = ({ message, alertProps, snackbarProps }) => {
+const Notifier: FC<Props> = ({ alertProps, snackbarProps }) => {
   const [isNotifierOpen, setIsNotifierOpen] = useState(false);
+  const { notification } = useContext(NotificationContext);
 
   const handleClose = () => setIsNotifierOpen(false);
   const handleOpen = () => setIsNotifierOpen(true);
 
   useEffect(() => {
-    if (message !== null) {
+    if (notification !== null) {
       handleOpen();
     }
-  }, [message]);
+  }, [notification]);
 
   return (
     <Snackbar {...snackbarProps} open={isNotifierOpen} autoHideDuration={1500} onClose={handleClose}>
       <Alert
         {...alertProps}
-        severity={message?.type}
+        severity={notification?.type}
         action={
           <>
             <IconButton aria-label="close" color="inherit" sx={{ p: 0.5 }} onClick={handleClose}>
@@ -38,7 +39,7 @@ const Notifier: FC<Props> = ({ message, alertProps, snackbarProps }) => {
           </>
         }
       >
-        {message?.message}
+        {notification?.message}
       </Alert>
     </Snackbar>
   );

@@ -73,7 +73,7 @@ func (us UserService) Login(c *gin.Context) {
 	)
 }
 
-func (us UserService) GetUserInfo(c *gin.Context, userID uint) {
+func (us UserService) GetUserInfo(userID uint) *domain.User {
 	var user *domain.User
 
 	user, err := us.UserRepo.GetUserInfoByID(userID)
@@ -81,7 +81,8 @@ func (us UserService) GetUserInfo(c *gin.Context, userID uint) {
 		panic.PanicException(constants.DataNotFound)
 	}
 
-	c.JSON(http.StatusOK, dto.BuildResponse[domain.User](constants.Success, *user))
+	return user
+	// c.JSON(http.StatusOK, dto.BuildResponse[domain.User](constants.Success, *user))
 }
 
 func (us UserService) validateRegister(c *gin.Context, registerForm *RegisterUserForm) bool {

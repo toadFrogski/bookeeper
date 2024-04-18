@@ -3,8 +3,11 @@ package user
 import (
 	"bookeeper/domain"
 	"bookeeper/utils/constants"
+	"bookeeper/utils/dto"
 	_ "bookeeper/utils/dto"
 	"bookeeper/utils/panic"
+	"bookeeper/utils/token"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -58,7 +61,8 @@ func (uc UserController) GetUserInfo(c *gin.Context) {
 		panic.PanicException(constants.InternalError)
 	}
 	user = vars.(*domain.User)
-	uc.UserSvc.GetUserInfo(c, user.ID)
+
+	c.JSON(http.StatusOK, dto.BuildResponse[domain.User](constants.Success, *user))
 }
 
 // GetUserInfoByID godoc
@@ -72,10 +76,48 @@ func (uc UserController) GetUserInfo(c *gin.Context) {
 // @Failure 500 {object} AnyResponse
 // @Router /profile/{user_id} [get]
 func (uc UserController) GetUserInfoByID(c *gin.Context) {
+	var user *domain.User
+
 	userID, err := strconv.Atoi(c.Param("userID"))
 	if err != nil {
 		panic.PanicException(constants.InternalError)
 	}
 
-	uc.UserSvc.GetUserInfo(c, uint(userID))
+	user = uc.UserSvc.GetUserInfo(uint(userID))
+	c.JSON(http.StatusOK, dto.BuildResponse[domain.User](constants.Success, *user))
+}
+
+// Refresh godoc
+// @Summary Refresh user session
+// @Tags auth
+// @Produce json
+// @Success 200 {object} AuthResponse
+// @Failure 400 {object} AnyResponse
+// @Failure 500 {object} AnyResponse
+// @Router /refresh [post]
+func (uc UserController) Refresh(c *gin.Context) {
+	var user *domain.User
+	var newToken *token.Token
+
+	claims, err := token.ExtractTokenClaims(c)
+	if err != nil {
+		panic.PanicException(constants.InvalidRequest)
+	}
+	sub, err := claims.GetSubject()
+	if err != nil {
+		panic.PanicException(constants.InvalidRequest)
+	}
+
+	userID, err := strconv.Atoi(sub)
+	if err != nil {
+		panic.PanicException(constants.InternalError)
+	}
+
+	user = uc.UserSvc.GetUserInfo(uint(userID))
+	newToken, err = token.GenerateToken(user)
+	if err != nil {
+		panic.PanicException(constants.InternalError)
+	}
+
+	c.JSON(http.StatusOK, dto.BuildResponse[Auth](constants.Success, Auth(*newToken)))
 }

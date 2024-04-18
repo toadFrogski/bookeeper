@@ -16,6 +16,9 @@ func GetBooksRoutes(r gin.IRouter) gin.IRouter {
 	{
 		bookRouter.GET("/", bookAPI.GetBookList)
 		bookRouter.GET(":bookID", bookAPI.GetBook)
+		bookRouter.POST(":bookID",
+			m.RoleAccessMiddleware([]c.Role{c.Admin, c.User}),
+			bookAPI.UpdateBook)
 		bookRouter.POST("save",
 			m.RoleAccessMiddleware([]c.Role{c.Admin, c.User}),
 			bookAPI.SaveBook)

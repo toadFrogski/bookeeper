@@ -22,6 +22,8 @@ type (
 		Expires int64  `json:"expires"`
 	} // @name Auth
 
+	Token = string // @name Token
+
 	ValidationError struct {
 		Type        string `json:"type"`
 		Description string `json:"description"`

@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-func validateSaveBookForm(form *SaveBookForm) error {
+func validateBookForm(form *BookForm) error {
 	fileType := form.Photo.Header.Get("Content-Type")
 	if ok, _ := regexp.MatchString("image/*", fileType); !ok {
 		return fmt.Errorf("Uploaded file is not image")

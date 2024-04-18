@@ -24,7 +24,7 @@ func (br BookRepository) GetBookList(p paginator.Paginator[[]*domain.Book]) ([]*
 	var books []*domain.Book
 	if err := br.db.Scopes(p.Paginate(books, br.db)).
 		Preload("User", func(tx *gorm.DB) *gorm.DB {
-			return tx.Select("ID", "Email", "Avatar")
+			return tx.Select("ID", "Username", "Email", "Avatar")
 		}).Find(&books).Error; err != nil {
 		return nil, err
 	}
@@ -34,6 +34,14 @@ func (br BookRepository) GetBookList(p paginator.Paginator[[]*domain.Book]) ([]*
 
 func (br BookRepository) CreateBook(book *domain.Book) error {
 	if err := br.db.Create(book).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (br BookRepository) UpdateBook(book *domain.Book) error {
+	if err := br.db.Save(book).Error; err != nil {
 		return err
 	}
 
@@ -56,7 +64,7 @@ func (br BookRepository) DeleteBookByID(ID string) error {
 	return nil
 }
 
-func (br BookRepository) GetUserBookByID(ID string) (*domain.Book, error) {
+func (br BookRepository) GetBookByID(ID string) (*domain.Book, error) {
 	var book domain.Book
 
 	if err := br.db.Model(domain.Book{}).First(&book, ID).Error; err != nil {

@@ -49,6 +49,25 @@ func (bc BookController) SaveBook(c *gin.Context) {
 	bc.BookSvc.SaveBook(c)
 }
 
+// UpdateBook godoc
+//
+// @Summary Update book
+// @Tags book
+// @Accept mpfd
+// @Produce json
+// @Param book_id path int true "Book ID"
+// @Param photo formData file false "Image to be uploaded"
+// @Param name formData string false "Name of book"
+// @Param author formData string false "Book author"
+// @Param description formData string false "Description of book"
+// @Success 200 {object} AnyResponse
+// @Failure 400 {object} AnyResponse
+// @Failure 500 {object} AnyResponse
+// @Router /book/{book_id} [post]
+func (bc BookController) UpdateBook(c *gin.Context) {
+	bc.BookSvc.UpdateBook(c)
+}
+
 // GetBook godoc
 // @Summary Get book by ID
 // @Tags book
@@ -84,7 +103,6 @@ func (bc BookController) GetBooksByUserID(c *gin.Context) {
 	param, err := strconv.Atoi(c.Param("user_id"))
 	if err != nil {
 		panic.PanicException(constants.InternalError)
-
 	}
 
 	userID := uint(param)

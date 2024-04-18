@@ -5,8 +5,8 @@ import { Button, Container } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { ApiContext } from "../../contexts/api";
 import { useStateWithError } from "../../../utils/hooks";
-import { Notifier, NotifierMessage } from "../../components";
 import { isAxiosError } from "axios";
+import { NotificationContext } from "../../contexts/notification";
 
 const ProfileAddBook: FC = () => {
   const [t] = useTranslation();
@@ -14,11 +14,11 @@ const ProfileAddBook: FC = () => {
 
   const book = useStateWithError<Book>({});
   const [bookImage, setBookImage] = useState<File>();
-  const [notifyMessage, setNotifyMessage] = useState<NotifierMessage>(null);
+  const { setNotification } = useContext(NotificationContext);
 
   useEffect(() => {
     if (book.error !== "") {
-      setNotifyMessage({ type: "error", message: t(book.error) });
+      setNotification({ type: "error", message: t(book.error) });
       book.setError("");
     }
   }, [book, t]);
@@ -36,7 +36,7 @@ const ProfileAddBook: FC = () => {
     bookApi
       .bookSavePost(bookImage, book.value.name, book.value.author, book.value.description)
       .then(() => {
-        setNotifyMessage({ type: "success", message: "profile.bookSaved" });
+        setNotification({ type: "success", message: "profile.bookSaved" });
       })
       .catch((err) => {
         if (isAxiosError(err)) {
@@ -78,7 +78,6 @@ const ProfileAddBook: FC = () => {
           {t("common.save")}
         </Button>
       </Container>
-      <Notifier message={notifyMessage} alertProps={{ variant: "filled" }} />
     </>
   );
 };

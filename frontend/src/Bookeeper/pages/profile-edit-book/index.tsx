@@ -7,21 +7,22 @@ import { useParams } from "react-router-dom";
 import { ApiContext } from "../../contexts/api";
 import { isAxiosError } from "axios";
 import { useStateWithError } from "../../../utils/hooks";
-import { Notifier, NotifierMessage } from "../../components";
+import { NotificationContext } from "../../contexts/notification";
 
 const ProfileEditBook: FC = () => {
   const [t] = useTranslation();
   const params = useParams();
   const { bookApi } = useContext(ApiContext);
+  const { setNotification } = useContext(NotificationContext);
 
   const book = useStateWithError<Book>({});
-  const [notifyMessage, setNotifyMessage] = useState<NotifierMessage>(null);
+  const [bookImage, setBookImage] = useState<File>();
 
   useEffect(() => {
     if (book.error !== "") {
-      setNotifyMessage({ type: "error", message: t(book.error) });
+      setNotification({ type: "error", message: t(book.error) });
     }
-  }, [book.error, t]);
+  }, [book.error, setNotification, t]);
 
   useEffect(() => {
     bookApi
@@ -48,13 +49,20 @@ const ProfileEditBook: FC = () => {
       });
   }, []);
 
-  const handleSaveBook = () => {};
+  const handleSaveBook = () => {
+    if (book.value.ID) {
+      bookApi
+        .bookBookIdPost(book.value.ID, bookImage, book.value.name, book.value.author, book.value.description)
+        .then(() => setNotification({ type: "success", message: t("success") }))
+        .catch(() => setNotification({ type: "error", message: t("error.unexpectedError") }));
+    }
+  };
 
   return (
     <>
       <Forms.BookForm
         book={book.value}
-        onPhotoChange={() => {}}
+        onPhotoChange={(file) => setBookImage(file)}
         onTitleChange={(value) =>
           book.setValue((book) => {
             return { ...book, name: value };
@@ -76,7 +84,6 @@ const ProfileEditBook: FC = () => {
           {t("common.save")}
         </Button>
       </Container>
-      <Notifier message={notifyMessage} alertProps={{ variant: "filled" }} />
     </>
   );
 };
