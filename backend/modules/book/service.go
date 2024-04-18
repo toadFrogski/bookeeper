@@ -79,7 +79,10 @@ func (bs BookService) UpdateBook(c *gin.Context) {
 	if form.Photo != nil {
 		media := os.Getenv("MEDIA_DIRECTORY")
 		fpath := filepath.Join(media, book.Photo)
-		c.SaveUploadedFile(form.Photo, fpath)
+		err := c.SaveUploadedFile(form.Photo, fpath)
+		if err != nil {
+			panic.PanicWithMessage(constants.UnknownError, err.Error())
+		}
 	}
 
 	if err := bs.BookRepo.UpdateBook(book); err != nil {

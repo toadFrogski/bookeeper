@@ -60,7 +60,7 @@ const Profile: FC = () => {
                 sx={{ mt: 1 }}
                 onDelete={() => {
                   setIsDeleteModalOpen(true);
-                  setSelectedBook(book.ID);
+                  setSelectedBook(book.ID ?? 0);
                 }}
                 onEdit={() => {
                   const path = parseURL(urls.profileEditBook);

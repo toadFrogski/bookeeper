@@ -2,9 +2,14 @@ SCHEMA := ${SCHEMA}
 HOSTNAME := ${HOSTNAME}
 DB_DSN := ${DB_DSN}
 
+release:	build compile_api build_frontend
+
 build:
 	docker compose up -d --build
 	docker compose exec nginx chown nginx:nginx /var/run/backend/www.sock
+
+build_frontend:
+	docker run -v ${PWD}/frontend:/frontend -w /frontend bookeeper/frontend build
 
 compile_api:
 	docker run -v ${PWD}/backend:/app -v ${PWD}/docs:/docs swag/autodoc init -g ./cmd/web/main.go -o /docs -d ./ --parseDependency -ot yaml --parseGoList=false

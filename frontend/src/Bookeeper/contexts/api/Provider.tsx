@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useContext, useEffect, useRef } from "react";
 import Context from "./Context";
 import axios from "axios";
-import { Auth, AuthApi, BookApi, UserApi } from "../../../services/api";
+import { AuthApi, BookApi, UserApi } from "../../../services/api";
 import { LoginContext } from "../../../contexts/login";
 
 type Props = PropsWithChildren;
@@ -45,7 +45,7 @@ const Provider: FC<Props> = ({ children }) => {
         throw error;
       }
     );
-  }, [logout]);
+  }, []);
 
   return (
     <Context.Provider value={{ authApi: authApi.current, userApi: userApi.current, bookApi: bookApi.current }}>

@@ -1,7 +1,7 @@
 services:
   nginx:
     volumes:
-      - ./docker/nginx/conf.dev.d:/etc/nginx/conf.d:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
     ports:
       - "8085:80"
 
@@ -15,17 +15,6 @@ services:
       - MEDIA_DIRECTORY="../media"
       - TOKEN_HOUR_LIFESPAN=12
       - API_SECRET=changeme
-
-  frontend:
-    image: bookeeper/frontend
-    build:
-      context: ./frontend
-    restart: unless-stopped
-    volumes:
-      - ./frontend/public:/frontend/public
-      - ./frontend/src:/frontend/src
-    environment:
-      - VITE_MEDIA_DIRECTORY=media
 
   db:
     environment:

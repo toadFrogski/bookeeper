@@ -5,10 +5,9 @@ import urls from "../../utils/urls";
 
 type Props = {
   redirect?: string;
-  role?: string;
 }
 
-const PrivateRoute: FC<Props> = ({redirect, role}) => {
+const PrivateRoute: FC<Props> = ({redirect}) => {
   const { token } = useContext(LoginContext);
   if (token.token === "") return <Navigate to={redirect ?? urls.signIn} />;
   return <Outlet />;
