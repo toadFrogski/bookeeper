@@ -26,12 +26,11 @@ services:
       - DB_USERNAME
       - DB_PASSWORD
       - DB_DATABASE
-      - MEDIA_DIRECTORY=/media
+      - MEDIA_DIRECTORY
       - TOKEN_HOUR_LIFESPAN
       - API_SECRET
     volumes:
       - backend_sock:/var/run
-      - ./media:/media
 
   db:
     image: postgres:alpine

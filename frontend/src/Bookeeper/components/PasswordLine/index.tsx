@@ -11,11 +11,11 @@ type Props = Omit<BoxProps, "display" | "alignItems" | "gap" | "margin"> & {
 };
 
 const generateColors = (strength: number, limits: number[], palette: Palette) => {
-  if (strength >= limits[2] ?? 80) {
+  if (strength >= limits[2]) {
     return [palette.primary.main, palette.primary.main, palette.primary.main];
-  } else if (strength >= limits[1] ?? 50) {
+  } else if (strength >= limits[1]) {
     return [palette.primary.main, palette.primary.main, palette.background.default];
-  } else if (strength >= limits[0] ?? 25) {
+  } else if (strength >= limits[0]) {
     return [palette.warning.main, palette.background.default, palette.background.default];
   } else {
     return [palette.background.default, palette.background.default, palette.background.default];
@@ -39,14 +39,14 @@ const PasswordLine: FC<Props> = ({ strength, limits, showStatus, ...props }) => 
           sx={{
             display: "flex",
             mt: 1,
-            color: strength < limits[1] ?? 50 ? palette.warning.main : palette.primary.main,
+            color: strength < limits[1] ? palette.warning.main : palette.primary.main,
           }}
         >
-          {strength >= limits[1] ?? 50 ? <CheckCircleOutline /> : <ErrorOutline />}
+          {strength >= limits[1] ? <CheckCircleOutline /> : <ErrorOutline />}
           <Typography variant="inherit" sx={{ ml: 1 }}>
-            {strength >= limits[2] ?? 80
+            {strength >= limits[2]
               ? t("common.strongPassword")
-              : strength >= limits[1] ?? 50
+              : strength >= limits[1]
               ? t("common.mediumPassword")
               : t("common.weakPassword")}
           </Typography>

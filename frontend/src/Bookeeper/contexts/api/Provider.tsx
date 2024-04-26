@@ -9,19 +9,18 @@ type Props = PropsWithChildren;
 const Provider: FC<Props> = ({ children }) => {
   const { token, setToken, logout } = useContext(LoginContext);
 
-  const client = useRef(
-    axios.create({
-      headers: {
-        Authorization: `Bearer ${token.token}`,
-      },
-    })
-  );
+  const client = useRef(axios.create());
 
   const authApi = useRef(new AuthApi(undefined, undefined, client.current));
   const userApi = useRef(new UserApi(undefined, undefined, client.current));
   const bookApi = useRef(new BookApi(undefined, undefined, client.current));
 
   useEffect(() => {
+    client.current.interceptors.request.use((request) => {
+      request.headers.Authorization = `Bearer ${token.token}`;
+
+      return request;
+    });
     client.current.interceptors.response.use(
       async (response) => response,
       (error) => {
@@ -42,6 +41,7 @@ const Provider: FC<Props> = ({ children }) => {
               });
           }
         }
+
         throw error;
       }
     );
