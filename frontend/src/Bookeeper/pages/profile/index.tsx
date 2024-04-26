@@ -8,6 +8,8 @@ import { ApiContext } from "../../contexts/api";
 import { Book } from "../../../services/api";
 import { t } from "i18next";
 import { NotificationContext } from "../../contexts/notification";
+import { isAxiosError } from "axios";
+import Boo from "../../assets/svg/boo.svg?react";
 
 const Profile: FC = () => {
   const navigate = useNavigate();
@@ -38,39 +40,50 @@ const Profile: FC = () => {
           setBooks(res.data.data);
         }
       })
-      .catch(() => {
-        setNotification({ type: "error", message: t("error.unexpectedError") });
+      .catch((err) => {
+        if (isAxiosError(err)) {
+          /** @TODO Handle errors  */
+        } else setNotification({ type: "error", message: t("error.unexpectedError") });
       });
   }, []);
 
   return (
     <Container sx={{ mt: 5, pb: 12 }}>
       <Typography variant="h5">My books</Typography>
-      <Box component="section" className={styles.bookContainer} sx={{ mt: 3 }}>
-        {books.map((book, idx) => (
-          <BookCard
-            sx={{ mt: 2 }}
-            key={`book-card-${idx}`}
-            title={book.name ?? ""}
-            photo={book.photo ?? ""}
-            author={book.author ?? ""}
-            owner={book.user?.email ?? ""}
-            renderActions={
-              <BookActionsMenu
-                sx={{ mt: 1 }}
-                onDelete={() => {
-                  setIsDeleteModalOpen(true);
-                  setSelectedBook(book.ID ?? 0);
-                }}
-                onEdit={() => {
-                  const path = parseURL(urls.profileEditBook);
-                  navigate(`${path[0]}${path[1]}/${book.ID}`);
-                }}
-              />
-            }
+      {books.length !== 0 ? (
+        <Box component="section" className={styles.bookContainer} sx={{ mt: 3 }}>
+          {books.map((book, idx) => (
+            <BookCard
+              sx={{ mt: 2 }}
+              key={`book-card-${idx}`}
+              title={book.name ?? ""}
+              photo={book.photo ?? ""}
+              author={book.author ?? ""}
+              owner={book.user?.email ?? ""}
+              renderActions={
+                <BookActionsMenu
+                  sx={{ mt: 1 }}
+                  onDelete={() => {
+                    setIsDeleteModalOpen(true);
+                    setSelectedBook(book.ID ?? 0);
+                  }}
+                  onEdit={() => {
+                    const path = parseURL(urls.profileEditBook);
+                    navigate(`${path[0]}${path[1]}/${book.ID}`);
+                  }}
+                />
+              }
+            />
+          ))}
+        </Box>
+      ) : (
+        <Box>
+          <Boo
+            style={{ maxWidth: "200px", maxHeight: "200px", filter: "invert(1)", margin: "0 auto", display: "block" }}
           />
-        ))}
-      </Box>
+          <p style={{ textAlign: "center" }}>Oh... I guess you don't have any books yet</p>
+        </Box>
+      )}
       <PlusFAB onClick={() => navigate(urls.profileAddBook)} />
       <Modal
         open={isDeleteModalOpen}
